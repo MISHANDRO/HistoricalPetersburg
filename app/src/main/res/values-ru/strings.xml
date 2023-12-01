@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Исторический Петербург</string>
+    <string name="nav_header_title">эт хэдер</string>
+    <string name="nav_header_subtitle">эт почта</string>
+    <string name="nav_header_desc">Эт хэдер</string>
+    <string name="action_settings">Настройки</string>
+    <string name="menu_setting">Настройки</string>
+    <string name="menu_achievements">Достижжения</string>
+    <string name="all_groups_name">Все категории</string>
+    <string name="language_title">Язык</string>
+    <string name="font_title">Шрифт</string>
+    <string name="user_title">Пользователь, то есть вы :)</string>
+    <string name="font_family_title">Стиль</string>
+    <string name="font_size_title">Размер</string>
+    <string name="user_name_title">Выше имя</string>
+    <string name="user_name_default">Супер гость</string>
+    <string name="user_reset_title">Сбросить прогресс</string>
+    <string name="all_routes_places">Все</string>
+    <string name="routes">Маршруты</string>
+    <string name="places">Места</string>
+</resources>

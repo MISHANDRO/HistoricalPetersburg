@@ -1,0 +1,45 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        app:entries="@array/lang_entries"
+        app:entryValues="@array/lang_values"
+        app:key="lang"
+        app:title="@string/language_title"
+        app:useSimpleSummaryProvider="true" />
+
+    <PreferenceCategory
+        app:title="@string/user_title">
+
+        <EditTextPreference
+            app:key="user_name"
+            app:title="@string/user_name_title"
+            app:defaultValue="@string/user_name_default"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            app:key="user_reset"
+            android:title="@string/user_reset_title"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/font_title">
+
+        <ListPreference
+            app:entries="@array/lang_entries"
+            app:entryValues="@array/lang_values"
+            app:key="family_family"
+            app:title="@string/font_family_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <SeekBarPreference
+            app:entryValues="@array/lang_values"
+            app:key="font_size"
+            app:title="@string/font_size_title"
+            app:min="12"
+            android:max="20"
+            app:showSeekBarValue="true"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

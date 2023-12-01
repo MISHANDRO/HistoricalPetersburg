@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">HistoricalPetersburg</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">Email huil</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_setting">Setting</string>
+    <string name="menu_achievements">Achievements</string>
+
+    <string name="all_groups_name">All categories</string>
+
+    <!-- Preference Titles -->
+    <string name="language_title">Language</string>
+    <string name="font_title">Font</string>
+    <string name="user_title">User, that is you :)</string>
+
+    <!-- Font Preferences -->
+    <string name="font_family_title">Family</string>
+    <string name="font_size_title">Size</string>
+
+    <!-- user Preferences -->
+    <string name="user_name_title">Your name</string>
+    <string name="user_name_default">Super guest</string>
+    <string name="user_reset_title">Reset progress</string>
+
+    <!-- Choose routes, places or all -->
+    <string name="all_routes_places">All</string>
+    <string name="routes">Routes</string>
+    <string name="places">Places</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/icon_settings"
+            android:title="@string/menu_setting" />
+        <item
+            android:id="@+id/nav_achievements"
+            android:icon="@drawable/icon_achievement"
+            android:title="@string/menu_achievements" />
+<!--        <item-->
+<!--            android:id="@+id/nav_completed"-->
+<!--            android:icon="@drawable/icon_route_white"-->
+<!--            android:title="Пройденное" />-->
+    </group>
+</menu>
