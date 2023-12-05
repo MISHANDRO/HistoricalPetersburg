@@ -6,54 +6,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.entities.Group
 
-class GroupListSpinnerSelectedListener(private val routeListAdapter: RecyclerView.Adapter<*>) : AdapterView.OnItemSelectedListener {
+class GroupListSpinnerSelectedListener(private val listAdapter: RecyclerView.Adapter<*>) : AdapterView.OnItemSelectedListener {
+
+    private var curSelected: Group? = null
+
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-
-        val tmp = MapManager.instance.routeManager.selectedRoutes.toList()
-        println(tmp.map { it.id })
-        MapManager.instance.routeManager.selectIntersectionOfGroupsById(listOf((parent.adapter.getItem(position) as Group).id))
-        var i = 0
-        var j = 0
-        var sdv = 0;
-        val cur = MapManager.instance.routeManager.selectedRoutes
-        println(cur.map { it.id })
-
-        while (i < tmp.size && j < cur.size) {
-            when {
-                tmp[i].id < cur[j].id -> {
-                    routeListAdapter.notifyItemRemoved(i + sdv)
-                    --sdv;
-                    i++
-                }
-                tmp[i].id > cur[j].id -> {
-                    // Элемент был добавлен
-                    routeListAdapter.notifyItemInserted(i + sdv)
-                    ++sdv;
-                    j++
-                }
-                else -> {
-                    i++
-                    j++
-                }
-            }
+        if (curSelected == null) {
+            curSelected = parent.adapter.getItem(0) as Group
         }
 
-        while (i < tmp.size) {
-            routeListAdapter.notifyItemRemoved(i + sdv)
-            --sdv;
-            i++
+        curSelected?.let { MapManager.instance.objectManager.shownGroups.remove(curSelected) }
+        curSelected = parent.adapter.getItem(position) as Group?
+
+        MapManager.instance.objectManager.apply {
+            shownGroups.add(curSelected!!)
+            updateShown()
+            zoomShown()
         }
 
-        while (j < cur.size) {
-            routeListAdapter.notifyItemInserted(i + sdv)
-            ++sdv;
-            j++
-        }
-
-//                        behavior.peekHeight = 150
-//                        behavior.maxHeight = 1500
-        println("GOOD")
-
+        listAdapter.notifyDataSetChanged() // TODO
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {

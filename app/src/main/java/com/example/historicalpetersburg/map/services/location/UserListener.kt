@@ -1,7 +1,7 @@
-package com.example.historicalpetersburg.map.services.locationManagers
+package com.example.historicalpetersburg.map.services.location
 
 import android.graphics.Color
-import android.graphics.PointF
+import com.example.historicalpetersburg.GlobalTools
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.MapManager
 import com.yandex.mapkit.layers.ObjectEvent
@@ -14,17 +14,17 @@ import com.yandex.runtime.image.ImageProvider
 
 class UserListener() : UserLocationObjectListener {
     override fun onObjectAdded(userLocationView: UserLocationView) {
-        userLocationView.arrow.setIcon(ImageProvider.fromResource(MapManager.instance.activity, R.drawable.arrow1))
+        userLocationView.arrow.setIcon(ImageProvider.fromResource(GlobalTools.instance.activity, R.drawable.arrow1))
         userLocationView.arrow.setIconStyle(IconStyle().setRotationType(RotationType.ROTATE))
 
 //        val picIcon = userLocationView.pin.useCompositeIcon()
 //
-//        picIcon.setIcon("icon", ImageProvider.fromResource(MapManager.instance.activity, R.drawable.arrow1),
+//        picIcon.setIcon("icon", ImageProvider.fromResource(GlobalTools.instance.activity, R.drawable.arrow1),
 //            IconStyle().setAnchor(PointF(0f, 0f))
 //                .setRotationType(RotationType.ROTATE).setZIndex(0f).setScale(1f)
 //        )
 
-//        picIcon.setIcon("pin", ImageProvider.fromResource(MapManager.instance.activity, R.drawable.arrow1),
+//        picIcon.setIcon("pin", ImageProvider.fromResource(GlobalTools.instance.activity, R.drawable.arrow1),
 //            IconStyle().setAnchor(PointF(0.5f, 05f)).setRotationType(RotationType.ROTATE).setZIndex(1f).setScale(0.5f)
 //        )
         userLocationView.accuracyCircle.fillColor = Color.GRAY
@@ -37,23 +37,23 @@ class UserListener() : UserLocationObjectListener {
         // Задание основного изображения для метки местоположения
 //        pinIcon.setIcon(
 //            "pin",
-//            ImageProvider.fromResource(MapManager.instance.activity, R.drawable.arrow),
+//            ImageProvider.fromResource(GlobalTools.instance.activity, R.drawable.arrow),
 //            IconStyle()
 //        )
 
         // Настройка изображения направления (стрелки)
-//        userLocationView.arrow.setIcon(ImageProvider.fromResource(MapManager.instance.activity, R.drawable.arrow1))
+//        userLocationView.arrow.setIcon(ImageProvider.fromResource(GlobalTools.instance.activity, R.drawable.arrow1))
 //        userLocationView.accuracyCircle.fillColor = Color.GRAY
     }
 
     override fun onObjectRemoved(p0: UserLocationView) {
 //        TODO("Not yet implemented")
-        MapManager.instance.toast("Удалились")
+        GlobalTools.instance.toast("Удалились")
     }
 
     override fun onObjectUpdated(userLocationView: UserLocationView, p1: ObjectEvent) {
 //        TODO("Not yet implemented")
-        MapManager.instance.toast("Переместились")
+        GlobalTools.instance.toast("Переместились")
 
     }
 }

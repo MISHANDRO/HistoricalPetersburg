@@ -1,20 +1,20 @@
-package com.example.historicalpetersburg.map.services.mapServices
+package com.example.historicalpetersburg.map.services.map
 
-import com.example.historicalpetersburg.R
-import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.models.Coordinate
+import com.example.historicalpetersburg.map.models.mapobject.ILine
+import com.example.historicalpetersburg.map.models.mapobject.YandexLine
+import com.example.historicalpetersburg.map.models.mapobject.IPlacemark
+import com.example.historicalpetersburg.map.models.mapobject.YandexPlacemark
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.ScreenPoint
 import com.yandex.mapkit.ScreenRect
 import com.yandex.mapkit.geometry.Circle
 import com.yandex.mapkit.geometry.Geometry
 import com.yandex.mapkit.geometry.Polyline
+import com.yandex.mapkit.geometry.PolylineBuilder
 import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.MapObject
-import com.yandex.mapkit.map.RotationType
 import com.yandex.mapkit.mapview.MapView
-import com.yandex.runtime.image.ImageProvider
 
 class YandexMapService(private val mapView: MapView) : IMapService {
 
@@ -59,9 +59,16 @@ class YandexMapService(private val mapView: MapView) : IMapService {
         mapView.map.move(position, Animation(Animation.Type.SMOOTH, duration), null)
     }
 
-    override fun addLine(coordinates: List<Coordinate>): Any {
-        val polyline = Polyline(coordinates.map { it.toYandexPoint() })
-        return mapView.map.mapObjects.addPolyline(polyline)
+    override fun addLine(coordinates: List<Coordinate>): ILine {
+        val builder = PolylineBuilder()
+        for (coordinate in coordinates) {
+            builder.append(coordinate.toYandexPoint())
+        }
+
+        val polyline = builder.build()
+        val polylineObject = mapView.map.mapObjects.addPolyline(polyline)
+
+        return YandexLine(polylineObject, coordinates)
     }
 
     override fun addCircle(coordinate: Coordinate, radius: Float): Any {
@@ -69,17 +76,12 @@ class YandexMapService(private val mapView: MapView) : IMapService {
         return mapView.map.mapObjects.addCircle(circle)
     }
 
-    override fun addPlacemark(coordinate: Coordinate): Any {
-        val placemark = mapView.map.mapObjects.addPlacemark().apply {
-            geometry = coordinate.toYandexPoint() // TODO
-            setIcon(ImageProvider.fromResource(MapManager.instance.activity, R.drawable.arrow1),
-                IconStyle().apply {
-                    rotationType = RotationType.ROTATE
-                    scale = 1.5f
-                }
-            )
+    override fun addPlacemark(coordinate: Coordinate): IPlacemark {
+        val placemarkObject = mapView.map.mapObjects.addPlacemark().apply {
+            geometry = coordinate.toYandexPoint()
         }
-        return placemark
+        println("olm $placemarkObject")
+        return YandexPlacemark(placemarkObject, coordinate)
     }
 
     override fun deleteObject(mapObject: Any) {

@@ -2,32 +2,38 @@ package com.example.historicalpetersburg.map.entities
 
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.models.Coordinate
-import com.example.historicalpetersburg.map.models.line.IRouteLine
-import com.example.historicalpetersburg.map.views.RouteInfoDialog
+import com.example.historicalpetersburg.map.models.mapobject.ILine
+import com.example.historicalpetersburg.map.views.bottomsheet.RouteInfoContentBottomSheet
 
-class Route(val id: Int) : IHistoricalObject {
+class Route(
+    coordinates: List<Coordinate>
+) : IHistoricalObject {
     override var name: String = ""
     override var shortDesc: String = ""
     override var longDesc: String = ""
 
-    lateinit var line: IRouteLine
-
-    val groupIds = mutableListOf<Int>()
-
-    val coordinates: List<Coordinate>
+    override val coordinates: List<Coordinate>
         get() = line.coordinates
 
-    override fun select(zoomPaddingX: Float,
-                        zoomPaddingY: Float,
-                        action: (() -> Unit)?) {
+    var line: ILine = MapManager.instance.map.addLine(coordinates)
+
+    override val groups: MutableList<Group> = mutableListOf()
+    override var imagesArrayId: Int = -1
+    override var completed: Boolean = false
+
+    init {
+        line.setAction {
+            select()
+            true
+        }
+    }
+
+    override fun select() {
         MapManager.instance.map.zoom(coordinates)
-        MapManager.instance.routeManager.hideAll()
+        MapManager.instance.objectManager.hideAll()
         show()
 
-        action?.invoke()
-
-        val dialog = RouteInfoDialog(this)
-        dialog.show(MapManager.instance.fragmentManager, dialog.tag)
+        RouteInfoContentBottomSheet(this).show()
     }
 
     override fun hide() {

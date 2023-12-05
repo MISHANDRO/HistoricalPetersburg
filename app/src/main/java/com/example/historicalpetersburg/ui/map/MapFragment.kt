@@ -4,17 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.historicalpetersburg.databinding.BottomSheetGroupsListBinding
+import com.example.historicalpetersburg.GlobalTools
+import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.databinding.FragmentMapBinding
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.views.GroupsRoutesListBottomSheet
+import com.example.historicalpetersburg.map.views.bottomsheet.GroupsRoutesListBottomSheet
+import com.example.historicalpetersburg.map.views.bottomsheet.ExtraBottomSheet
 import com.example.historicalpetersburg.map.views.adapters.GroupListAdapter
 import com.example.historicalpetersburg.map.views.adapters.HistoricalObjectListAdapter
 import com.example.historicalpetersburg.map.views.behaviors.ListBottomSheetBehaviorCallback
 import com.example.historicalpetersburg.map.views.listeners.GroupListSpinnerSelectedListener
+import com.example.historicalpetersburg.map.views.listeners.TypeSelectionListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
@@ -26,7 +28,9 @@ class MapFragment() : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var bottomSheet: GroupsRoutesListBottomSheet
+
+    lateinit var bottomSheet: GroupsRoutesListBottomSheet
+    lateinit var extraBottomSheet: ExtraBottomSheet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -214,16 +218,14 @@ class MapFragment() : Fragment() {
         binding.mapview.map.setMapStyle(styleOnlyHide)
         binding.mapview.map.isNightModeEnabled = true
 
-        val bottomSheetBinding = BottomSheetGroupsListBinding.bind(binding.bottomSheet.root)
-
         val groupRouteAdapter = GroupListAdapter(
-            MapManager.instance.activity,
-            MapManager.instance.routeManager.groups
+            GlobalTools.instance.activity,
+            MapManager.instance.objectManager.groups,
         )
 
-        val historicalObjectListAdapter = HistoricalObjectListAdapter(MapManager.instance.routeManager.selectedRoutes)
+        val historicalObjectListAdapter = HistoricalObjectListAdapter(MapManager.instance.objectManager.listOfShown)
 
-        bottomSheet = GroupsRoutesListBottomSheet(bottomSheetBinding).apply {
+        bottomSheet = GroupsRoutesListBottomSheet(binding.bottomSheetMain).apply {
             peekHeight = 235
             maxHeight = 1500
             state = BottomSheetBehavior.STATE_COLLAPSED
@@ -239,11 +241,13 @@ class MapFragment() : Fragment() {
             setRecycleViewList(historicalObjectListAdapter)
 
             setCallback(ListBottomSheetBehaviorCallback(
-                binding.downContent,
-                binding.downContent.marginBottom, behavior
+                binding.downContent, behavior
             ))
         }
 
+        binding.typeSelection.addOnTabSelectedListener(TypeSelectionListener(historicalObjectListAdapter))
+
+        extraBottomSheet = ExtraBottomSheet(binding.bottomSheetOther)
 
         return root
     }
@@ -251,15 +255,15 @@ class MapFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        MapManager.instance.routeManager.returnSelectedRoutes()
+//        MapManager.instance.objectManager.returnSelectedRoutes()
         // TODO
     }
 
     private fun setupMapManager() {
-        MapManager.setupYandexManager(requireActivity(), binding.mapview, parentFragmentManager)
+        MapManager.setupYandexManager(binding.mapview, this)
 
         MapManager.instance.createDefaultRoutes()
-        MapManager.instance.routeManager.selectAll()
+//        MapManager.instance.objectManager.selectAll()
 
         // -----------------------------
     }

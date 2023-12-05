@@ -1,110 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/transparent">
 
+    android:id="@+id/route_group_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_primary_round_up_10"
+    android:orientation="vertical"
+    android:paddingHorizontal="5dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:gravity="bottom|center_horizontal"
+        android:text="—"
+        android:textAlignment="center"
+        android:textSize="30sp" />
 
     <LinearLayout
-        android:id="@+id/route_group_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_primary_round_up_10"
-        android:orientation="vertical"
-        android:paddingHorizontal="5dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-
-
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="26dp"
-            android:gravity="bottom|center_horizontal"
-            android:text="—"
-            android:textAlignment="center"
-            android:textSize="30sp" />
+        android:layout_marginTop="-20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="5dp"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:orientation="vertical">
+                android:gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:text="By time"
+                android:textAlignment="center"
+                android:textColor="?colorOnPrimary"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="10dp"
-                    android:text="By time"
-                    android:textAlignment="center"
-                    android:textColor="?colorOnPrimary"
-                    android:textSize="18sp" />
-
-                <Spinner
-                    android:id="@+id/group_list_spinner_1"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_primary_variant_round_all_5"
-                    android:minHeight="48dp"
-                    android:spinnerMode="dialog"
-                    android:theme="@style/SpinnerDarkTheme"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/group_list_spinner_1"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="10dp"
-                    android:text="By group"
-                    android:textAlignment="center"
-                    android:textColor="?colorOnPrimary"
-                    android:textSize="18sp" />
-
-                <Spinner
-                    android:id="@+id/group_list_spinner_2"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_primary_variant_round_all_5"
-                    android:minHeight="48dp"
-                    android:spinnerMode="dropdown" />
-
-            </LinearLayout>
+                android:background="@drawable/background_primary_variant_round_all_5"
+                android:minHeight="48dp"
+                android:spinnerMode="dialog"
+                android:theme="@style/SpinnerDarkTheme"/>
 
         </LinearLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_marginTop="20dp"
-            android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycle_route_list"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_list_route" />
+                android:gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:text="By group"
+                android:textAlignment="center"
+                android:textColor="?colorOnPrimary"
+                android:textSize="18sp" />
 
-        </ScrollView>
+            <Spinner
+                android:id="@+id/group_list_spinner_2"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_primary_variant_round_all_5"
+                android:minHeight="48dp"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="20dp"
+        android:scrollbars="none">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_route_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_list_route" />
+
+    </ScrollView>
+
+</LinearLayout>
+

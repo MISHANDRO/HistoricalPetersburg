@@ -18,8 +18,6 @@
         <item name="preferenceTheme">@style/SettingsTheme</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:textColorSecondary">?colorSecondaryVariant</item>
-
-
     </style>
 
     <style name="SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -28,23 +26,11 @@
     </style>
 
 
-    <!-- Bottom sheet themes -->
-    <style name="InsetBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/InsetModalStyle</item>
+    <style name="CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">30%</item>
     </style>
 
-    <style name="InsetModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/background_primary_round_all_30_inset_10</item>
-    </style>
-
-    <style name="DefaultBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/DefaultModalStyle</item>
-    </style>
-
-    <style name="DefaultModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/background_primary_round_up_10</item>
-    </style>
-    <!-- End bottom sheet themes -->
 
     <!-- Start check custom -->
     <style name="DarkCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">

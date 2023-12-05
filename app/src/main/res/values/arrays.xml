@@ -10,4 +10,10 @@
         <item>ru</item>
     </string-array>
     <!-- End Language Preference-->
+
+    <!-- Image ID's of routes -->
+    <integer-array name="route_images_1">
+        <item>@drawable/menu_bg</item>
+    </integer-array>
+    <!-- End image ID's of routes -->
 </resources>

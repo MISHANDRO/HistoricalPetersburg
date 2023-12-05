@@ -7,7 +7,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ListBottomSheetBehaviorCallback(
     private val pinContent: View,
-    private val margin: Int,
     private var behavior: BottomSheetBehavior<LinearLayout>) : BottomSheetBehavior.BottomSheetCallback()
 {
     private val params = pinContent.layoutParams as ViewGroup.MarginLayoutParams
@@ -45,8 +44,12 @@ class ListBottomSheetBehaviorCallback(
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        params.bottomMargin = bottomSheet.height - bottomSheet.top + margin
-        pinContent.requestLayout()
-        println(bottomSheet.height - bottomSheet.top)
+//        pinContent.translationY = -(bottomSheet.height-margin-pinContent.height)*slideOffset
+        pinContent.translationY = -slideOffset * (bottomSheet.height - behavior.peekHeight)
+//
+//        println(params.bottomMargin)
+//        params.bottomMargin = bottomSheet.top - bottomSheet.height + margin
+//        pinContent.requestLayout()
+        // println(bottomSheet.height - bottomSheet.top)
     }
 }

@@ -1,7 +1,6 @@
-package com.example.historicalpetersburg.map.services.locationManagers
+package com.example.historicalpetersburg.map.services.location
 
-import android.util.Log
-import com.example.historicalpetersburg.MainActivity
+import com.example.historicalpetersburg.GlobalTools
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.models.Coordinate
 import com.yandex.mapkit.geometry.Point
@@ -47,10 +46,10 @@ class YandexLocationListener : LocationListener {
         if (locationStatus == LocationStatus.NOT_AVAILABLE) {
             curPosition = null
             hidePosition()
-            MapManager.instance.toast("Не доступно")
+            GlobalTools.instance.toast("Не доступно")
         } else {
             displayPosition()
-            MapManager.instance.toast("Доступно")
+            GlobalTools.instance.toast("Доступно")
         }
     }
 

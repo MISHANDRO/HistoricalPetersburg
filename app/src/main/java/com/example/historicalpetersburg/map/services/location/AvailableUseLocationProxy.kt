@@ -1,4 +1,4 @@
-package com.example.historicalpetersburg.map.services.locationManagers
+package com.example.historicalpetersburg.map.services.location
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -11,6 +11,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.historicalpetersburg.GlobalTools
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.models.Coordinate
 import com.google.android.gms.common.api.ApiException
@@ -55,18 +56,18 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
 
     private fun haveLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
-            MapManager.instance.activity,
+            GlobalTools.instance.activity,
             android.Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermission() {
         val canRequestPermission: Boolean = ActivityCompat.shouldShowRequestPermissionRationale(
-            MapManager.instance.activity, android.Manifest.permission.ACCESS_FINE_LOCATION)
+            GlobalTools.instance.activity, android.Manifest.permission.ACCESS_FINE_LOCATION)
 
         if (canRequestPermission) {
             ActivityCompat.requestPermissions(
-                MapManager.instance.activity,
+                GlobalTools.instance.activity,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                 locationPermissionRequestCode
             )
@@ -77,7 +78,7 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
     }
 
     private fun isLocationEnabled(): Boolean {
-        val locationManager = MapManager.instance.activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = GlobalTools.instance.activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
@@ -85,10 +86,10 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
         val locationSettingsRequest = LocationSettingsRequest.Builder().addLocationRequest(
             LocationRequest.create()).build()
 
-        val settingsClient: SettingsClient = LocationServices.getSettingsClient(MapManager.instance.activity)
+        val settingsClient: SettingsClient = LocationServices.getSettingsClient(GlobalTools.instance.activity)
 
         settingsClient.checkLocationSettings(locationSettingsRequest)
-            .addOnCompleteListener(MapManager.instance.activity) { task ->
+            .addOnCompleteListener(GlobalTools.instance.activity) { task ->
                 try {
                     task.getResult(ApiException::class.java)
                 } catch (ex: ApiException) {
@@ -97,7 +98,7 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
                             try {
                                 val resolvableApiException = ex as ResolvableApiException
                                 resolvableApiException.startResolutionForResult(
-                                    MapManager.instance.activity,
+                                    GlobalTools.instance.activity,
                                     requestCheckSettings
                                 )
                             } catch (_: IntentSender.SendIntentException) { }
@@ -124,7 +125,7 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
             if (resultCode == Activity.RESULT_OK) {
                 locationRequestResultCallback?.let { withAvailableUseLocation(it) }
             } else {
-                MapManager.instance.toast("Твои проблемы TODO")
+                GlobalTools.instance.toast("Твои проблемы TODO")
             }
         }
 
@@ -149,20 +150,20 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
 
 
     private fun alertDialogToRequestPermission() { // TODO не алерт а окно
-        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(MapManager.instance.activity)
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(GlobalTools.instance.activity)
         alertDialogBuilder.setTitle("Нужен доступ к уведомлениям")
         alertDialogBuilder.setMessage("Это приложение требует доступа к уведомлениям для корректной работы.")
 
         alertDialogBuilder.setPositiveButton("Настройки") { _, _ ->
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", MapManager.instance.activity.packageName, null)
+            val uri = Uri.fromParts("package", GlobalTools.instance.activity.packageName, null)
             intent.data = uri
-            MapManager.instance.activity.startActivity(intent)
+            GlobalTools.instance.activity.startActivity(intent)
         }
 
-        alertDialogBuilder.setNegativeButton("Отмена", {_, _ ->
-            MapManager.instance.toast("Ну и иди нахуй, еблана кусок TODO")
-        })
+        alertDialogBuilder.setNegativeButton("Отмена") { _, _ ->
+            GlobalTools.instance.toast("Ну и иди нахуй, еблана кусок TODO")
+        }
         alertDialogBuilder.show()
     }
 }

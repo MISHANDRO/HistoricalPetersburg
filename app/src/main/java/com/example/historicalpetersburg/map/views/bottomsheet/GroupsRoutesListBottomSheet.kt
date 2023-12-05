@@ -1,30 +1,15 @@
-package com.example.historicalpetersburg.map.views
+package com.example.historicalpetersburg.map.views.bottomsheet
 
 import android.widget.AdapterView
 import android.widget.BaseAdapter
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.databinding.BottomSheetGroupsListBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class GroupsRoutesListBottomSheet(private val binding: BottomSheetGroupsListBinding) {
-    val behavior: BottomSheetBehavior<LinearLayout> = BottomSheetBehavior.from(binding.routeGroupBottomSheet)
 
-    var peekHeight: Int
-        get() = behavior.peekHeight
-        set(value) { behavior.peekHeight = value }
-
-    var maxHeight: Int
-        get() = behavior.maxHeight
-        set(value) { behavior.maxHeight = value }
-
-    var state: Int
-        get() = behavior.state
-        set(value) { behavior.state = value }
-
-    var halfExpandedRatio: Float
-        get() = behavior.halfExpandedRatio
-        set(value) { behavior.halfExpandedRatio = value }
+class GroupsRoutesListBottomSheet(private val binding: BottomSheetGroupsListBinding) :
+    IBottomSheet {
+    override val behavior = BottomSheetBehavior.from(binding.routeGroupBottomSheet)
 
     init {
         binding.routeGroupBottomSheet.setOnClickListener {

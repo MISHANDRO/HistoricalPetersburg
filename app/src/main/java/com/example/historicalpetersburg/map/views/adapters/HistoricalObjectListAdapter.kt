@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.R
+import com.example.historicalpetersburg.map.entities.IHistoricalObject
 import com.example.historicalpetersburg.map.entities.Route
 
 
-class HistoricalObjectListAdapter(private val dataSet: MutableList<Route>) :
+class HistoricalObjectListAdapter(private val dataSet: MutableList<IHistoricalObject>) :
     RecyclerView.Adapter<HistoricalObjectListAdapter.ViewHolder>() {
 
     var actionOnClick: (() -> Unit)? = null
@@ -34,12 +35,15 @@ class HistoricalObjectListAdapter(private val dataSet: MutableList<Route>) :
 
         val route = dataSet[position];
         viewHolder.itemView.setOnClickListener {
-            route.select(actionOnClick)
+            route.select()
+            actionOnClick?.invoke()
         }
     }
 
     override fun getItemCount() = dataSet.size
 }
+
+//class ItemAnim : DefaultItemAnimator
 
 //class ItemAnim : DefaultItemAnimator() {
 //    override fun animateDisappearance(

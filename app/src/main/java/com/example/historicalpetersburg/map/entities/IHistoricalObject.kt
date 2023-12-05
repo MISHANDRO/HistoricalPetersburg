@@ -1,13 +1,20 @@
 package com.example.historicalpetersburg.map.entities
 
+import com.example.historicalpetersburg.map.models.Coordinate
+
 interface IHistoricalObject {
     var name: String
     var shortDesc: String
     var longDesc: String
 
-    fun select(zoomPaddingX: Float = 150f,
-               zoomPaddingY: Float = 150f,
-               action: (() -> Unit)? = null)
+    val coordinates: List<Coordinate>
+    val groups: MutableList<Group>
+
+    var completed: Boolean
+
+    var imagesArrayId: Int
+
+    fun select()
 
     fun hide()
     fun show()

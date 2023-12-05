@@ -1,4 +1,4 @@
-package com.example.historicalpetersburg.map.services.locationManagers
+package com.example.historicalpetersburg.map.services.location
 
 import com.example.historicalpetersburg.map.models.Coordinate
 

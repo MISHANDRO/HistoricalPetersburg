@@ -1,44 +1,33 @@
 package com.example.historicalpetersburg.map
 
-import android.app.Activity
-import android.widget.Toast
-import androidx.fragment.app.FragmentManager
+import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.models.Coordinate
-import com.example.historicalpetersburg.map.services.factories.YandexRouteFactory
-import com.example.historicalpetersburg.map.services.locationManagers.AvailableUseLocationProxy
-import com.example.historicalpetersburg.map.services.locationManagers.ILocationManager
-import com.example.historicalpetersburg.map.services.locationManagers.YandexLocationManager
-import com.example.historicalpetersburg.map.services.mapServices.IMapService
-import com.example.historicalpetersburg.map.services.mapServices.YandexMapService
-import com.example.historicalpetersburg.map.services.routeManagers.IRouteManager
-import com.example.historicalpetersburg.map.services.routeManagers.RouteManager
+import com.example.historicalpetersburg.map.services.HistoricalObjectManager
+import com.example.historicalpetersburg.map.services.location.ILocationManager
+import com.example.historicalpetersburg.map.services.map.IMapService
+import com.example.historicalpetersburg.map.services.map.YandexMapService
+import com.example.historicalpetersburg.ui.map.MapFragment
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
-import com.yandex.runtime.i18n.I18nManagerFactory
 
-class MapManager {
-    private var _activity: Activity? = null
-
-    private var _fragmentManager: FragmentManager? = null
+class MapManager private constructor() {
+    private var _mapFragment: MapFragment? = null
 
     private var _map: IMapService? = null
 
-    private var _routeManager: IRouteManager? = null
+    private var _objectManager: HistoricalObjectManager? = null
 
     private var _locationManager: ILocationManager? = null
 
 
-    val activity: Activity
-        get() = _activity!!
-
-    val fragmentManager: FragmentManager
-        get() = _fragmentManager!!
+    val mapFragment: MapFragment
+        get() = _mapFragment!!
 
     val map: IMapService
         get() = _map!!
 
-    val routeManager: IRouteManager
-        get() = _routeManager!!
+    val objectManager: HistoricalObjectManager
+        get() = _objectManager!!
 
     val locationManager: ILocationManager
         get() = _locationManager!!
@@ -54,27 +43,20 @@ class MapManager {
         }
 
         fun setupYandexManager(
-            activity: Activity,
             mapView: MapView?,
-            fragmentManager: FragmentManager)
+            mapFragment: MapFragment)
         {
             if (mapView == null) {
                 throw NullPointerException("MapView can't be null!")
             }
 
-            instance._activity = activity
+            instance._mapFragment = mapFragment
             instance._map = YandexMapService(mapView)
-            instance._fragmentManager = fragmentManager
 
 //            MapKitFactory.initialize(activity)
 
-            val rm = RouteManager()
-            rm.initialize(
-                YandexRouteFactory()
-            )
-
-            instance._routeManager = rm
-            instance._locationManager = AvailableUseLocationProxy(YandexLocationManager())
+            instance._objectManager = HistoricalObjectManager()
+//            instance._locationManager = AvailableUseLocationProxy(YandexLocationManager())
 
             MapKitFactory.getInstance().onStart()
             mapView.onStart()
@@ -82,15 +64,9 @@ class MapManager {
     }
 
     fun clear() {
-        _activity = null
-        _fragmentManager = null
         _map = null
-        _routeManager = null
+        _objectManager = null
         _locationManager = null
-    }
-
-    fun toast(message: String, length: Int = Toast.LENGTH_SHORT) {
-        Toast.makeText(activity, message, length).show()
     }
 
     fun createDefaultRoutes() {
@@ -101,14 +77,14 @@ class MapManager {
             Coordinate(60.022469267560666, 30.235801487372743)
         )
 
-        routeManager.addGroup().apply {
-            name = "ХУЙ"
+        val group1 = objectManager.addGroup().apply {
+            name = "Категория 1"
         }
 
-        routeManager.addGroup().apply {
-            name = "Пизда"
+        val group2 = objectManager.addGroup().apply {
+            name = "Категория 2"
         }
-        routeManager.addRoute(route, listOf(1)).apply {
+        objectManager.addRoute(route, listOf(group1)).apply {
             name = "Маршрут 1 харош"
         }
 
@@ -116,7 +92,7 @@ class MapManager {
             Coordinate(60.023376971379676,30.232946668237947),
             Coordinate(60.024683921240154,30.237026046907634)
         )
-        routeManager.addRoute(route, listOf(2)).apply {
+        objectManager.addRoute(route, listOf(group2)).apply {
             name = "Еще хорош 2"
         }
 
@@ -125,8 +101,17 @@ class MapManager {
             Coordinate(60.023545581819505,30.229022335207212),
             Coordinate(60.02495317510064,30.234096810760526)
         )
-        routeManager.addRoute(route, listOf(1, 2)).apply {
+        objectManager.addRoute(route, listOf(group1, group2)).apply {
             name = "Бим 3"
+            imagesArrayId = R.array.route_images_1
         }
+
+//        MapManager.instance.map.addPlacemark(Coordinate(60.0229774804831,30.233355569284313))
+
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313), listOf(group1)).apply {
+            name = "Точка"
+        }
+
+        objectManager.updateShown()
     }
 }

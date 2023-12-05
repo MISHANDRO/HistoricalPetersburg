@@ -1,5 +1,6 @@
-package com.example.historicalpetersburg.map.services.locationManagers
+package com.example.historicalpetersburg.map.services.location
 
+import com.example.historicalpetersburg.GlobalTools
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.models.Coordinate
 import com.yandex.mapkit.MapKitFactory
@@ -21,13 +22,13 @@ class YandexLocationManager : ILocationManager {
         locationManager.subscribeForLocationUpdates(0.0, 1000, 0.0, false, FilteringMode.OFF, locationListener);
         locationManager.requestSingleUpdate(locationListener)
 
-        MapManager.instance.toast("Заебись работаем")
+        GlobalTools.instance.toast("Заебись работаем")
     }
 
     override fun unsubscribeToLocationUpdate() {
         locationManager.unsubscribe(locationListener)
 
-        MapManager.instance.toast("Больше не работаем")
+        GlobalTools.instance.toast("Больше не работаем")
     }
 
     override fun displayLocation() {

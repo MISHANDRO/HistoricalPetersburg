@@ -30,14 +30,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as App).mainActivity = this
 
-        val locale = Locale(application.resources.configuration.locale.language)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        resources.updateConfiguration(config, resources.displayMetrics)
+        setLocale()
+        GlobalTools.setup(this, supportFragmentManager)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -88,11 +86,19 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        MapManager.instance.locationManager.onRequestPermissionsResult(requestCode, grantResults)
+//        MapManager.instance.locationManager.onRequestPermissionsResult(requestCode, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        MapManager.instance.locationManager.onLocationEnabledResult(requestCode, resultCode)
+//        MapManager.instance.locationManager.onLocationEnabledResult(requestCode, resultCode)
+    }
+
+    private fun setLocale() {
+        val locale = Locale(application.resources.configuration.locale.language)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }
