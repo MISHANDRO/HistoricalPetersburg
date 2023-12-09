@@ -6,17 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.historicalpetersburg.GlobalTools
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.databinding.FragmentMapBinding
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.views.bottomsheet.GroupsRoutesListBottomSheet
-import com.example.historicalpetersburg.map.views.bottomsheet.ExtraBottomSheet
-import com.example.historicalpetersburg.map.views.adapters.GroupListAdapter
-import com.example.historicalpetersburg.map.views.adapters.HistoricalObjectListAdapter
-import com.example.historicalpetersburg.map.views.behaviors.ListBottomSheetBehaviorCallback
-import com.example.historicalpetersburg.map.views.listeners.GroupListSpinnerSelectedListener
-import com.example.historicalpetersburg.map.views.listeners.TypeSelectionListener
+import com.example.historicalpetersburg.map.main.filters.GroupFilterChain
+import com.example.historicalpetersburg.map.main.filters.TypeFilterChain
+import com.example.historicalpetersburg.map.main.views.bottomsheet.GroupsRoutesListBottomSheet
+import com.example.historicalpetersburg.map.main.views.bottomsheet.ExtraBottomSheet
+import com.example.historicalpetersburg.map.main.views.adapters.GroupListAdapter
+import com.example.historicalpetersburg.map.main.views.adapters.HistoricalObjectListAdapter
+import com.example.historicalpetersburg.map.main.views.behaviors.ListBottomSheetBehaviorCallback
+import com.example.historicalpetersburg.map.main.views.listeners.GroupListSpinnerSelectedListener
+import com.example.historicalpetersburg.map.main.views.listeners.TypeSelectionListener
+import com.example.historicalpetersburg.tools.value.StringVal
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
@@ -219,11 +221,20 @@ class MapFragment() : Fragment() {
         binding.mapview.map.isNightModeEnabled = true
 
         val groupRouteAdapter = GroupListAdapter(
-            GlobalTools.instance.activity,
-            MapManager.instance.objectManager.groups,
+            StringVal(R.string.all_groups_name),
+            MapManager.instance.objectManager.groups.toMutableList()
         )
 
         val historicalObjectListAdapter = HistoricalObjectListAdapter(MapManager.instance.objectManager.listOfShown)
+
+        // Filters
+        val typeFilterChain = TypeFilterChain()
+        val groupFilter1 = GroupFilterChain()
+
+        typeFilterChain.addNext(groupFilter1)
+
+        MapManager.instance.objectManager.filterChain = typeFilterChain
+        // End filters
 
         bottomSheet = GroupsRoutesListBottomSheet(binding.bottomSheetMain).apply {
             peekHeight = 235
@@ -236,18 +247,27 @@ class MapFragment() : Fragment() {
                 binding.mapview.visibility = View.VISIBLE
             }
 
-            setSpinner1(groupRouteAdapter, GroupListSpinnerSelectedListener(historicalObjectListAdapter))
+            setSpinner1(
+                groupRouteAdapter,
+                GroupListSpinnerSelectedListener(groupFilter1, historicalObjectListAdapter)
+            )
 
             setRecycleViewList(historicalObjectListAdapter)
 
-            setCallback(ListBottomSheetBehaviorCallback(
+            setCallback(
+                ListBottomSheetBehaviorCallback(
                 binding.downContent, behavior
-            ))
+            )
+            )
         }
 
-        binding.typeSelection.addOnTabSelectedListener(TypeSelectionListener(historicalObjectListAdapter))
+        binding.typeSelection.addOnTabSelectedListener(
+            TypeSelectionListener(typeFilterChain, historicalObjectListAdapter)
+        )
 
         extraBottomSheet = ExtraBottomSheet(binding.bottomSheetOther)
+
+        MapManager.instance.objectManager.updateShown() // TODO
 
         return root
     }
@@ -255,8 +275,7 @@ class MapFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        MapManager.instance.objectManager.returnSelectedRoutes()
-        // TODO
+        MapManager.instance.objectManager.zoomShown() // TODO
     }
 
     private fun setupMapManager() {

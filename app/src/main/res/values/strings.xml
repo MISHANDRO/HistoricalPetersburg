@@ -10,6 +10,11 @@
 
     <string name="all_groups_name">All categories</string>
 
+    <!-- Fullscreen image viewer -->
+    <string name="option_menu_save">Save to gallery</string>
+    <string name="image_viewer_of">of</string>
+    <string name="unsuccess_save">Failed to download</string>
+
     <!-- Preference Titles -->
     <string name="language_title">Language</string>
     <string name="font_title">Font</string>

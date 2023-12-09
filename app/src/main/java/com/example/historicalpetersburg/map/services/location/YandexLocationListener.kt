@@ -1,8 +1,8 @@
 package com.example.historicalpetersburg.map.services.location
 
-import com.example.historicalpetersburg.GlobalTools
+import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.models.Coordinate
+import com.example.historicalpetersburg.map.main.Coordinate
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationListener

@@ -1,6 +1,6 @@
 package com.example.historicalpetersburg.map.services.location
 
-import com.example.historicalpetersburg.map.models.Coordinate
+import com.example.historicalpetersburg.map.main.Coordinate
 
 
 interface ILocationManager {

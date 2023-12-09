@@ -1,11 +1,9 @@
 package com.example.historicalpetersburg
 
 import android.app.Application
-import android.content.pm.PackageManager
 import android.content.res.Configuration
+import com.example.historicalpetersburg.activities.MainActivity
 import com.example.historicalpetersburg.map.MapManager
-import com.yandex.mapkit.MapKitFactory
-import com.yandex.runtime.i18n.I18nManagerFactory
 import java.util.Locale
 
 

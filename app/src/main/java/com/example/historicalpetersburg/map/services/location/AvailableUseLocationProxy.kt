@@ -11,9 +11,8 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.historicalpetersburg.GlobalTools
-import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.models.Coordinate
+import com.example.historicalpetersburg.tools.GlobalTools
+import com.example.historicalpetersburg.map.main.Coordinate
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest

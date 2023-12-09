@@ -1,11 +1,11 @@
 package com.example.historicalpetersburg.map
 
 import com.example.historicalpetersburg.R
-import com.example.historicalpetersburg.map.models.Coordinate
-import com.example.historicalpetersburg.map.services.HistoricalObjectManager
+import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.HistoricalObjectManager
 import com.example.historicalpetersburg.map.services.location.ILocationManager
-import com.example.historicalpetersburg.map.services.map.IMapService
-import com.example.historicalpetersburg.map.services.map.YandexMapService
+import com.example.historicalpetersburg.map.main.IMapService
+import com.example.historicalpetersburg.map.yandex.YandexMapService
 import com.example.historicalpetersburg.ui.map.MapFragment
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
@@ -78,22 +78,24 @@ class MapManager private constructor() {
         )
 
         val group1 = objectManager.addGroup().apply {
-            name = "Категория 1"
+            name.value = "Категория 1"
         }
 
         val group2 = objectManager.addGroup().apply {
-            name = "Категория 2"
+            name.value = "Категория 2"
         }
-        objectManager.addRoute(route, listOf(group1)).apply {
-            name = "Маршрут 1 харош"
+        objectManager.addRoute(route).apply {
+            name.value = "Маршрут 1 харош"
+            addGroups(listOf(group1))
         }
 
         route = listOf(
             Coordinate(60.023376971379676,30.232946668237947),
             Coordinate(60.024683921240154,30.237026046907634)
         )
-        objectManager.addRoute(route, listOf(group2)).apply {
-            name = "Еще хорош 2"
+        objectManager.addRoute(route).apply {
+            name.value = "Еще хорош 2"
+            addGroups(listOf(group2))
         }
 
         route = listOf(
@@ -101,15 +103,17 @@ class MapManager private constructor() {
             Coordinate(60.023545581819505,30.229022335207212),
             Coordinate(60.02495317510064,30.234096810760526)
         )
-        objectManager.addRoute(route, listOf(group1, group2)).apply {
-            name = "Бим 3"
+        objectManager.addRoute(route).apply {
+            name.value = "Бим 3"
             imagesArrayId = R.array.route_images_1
+            addGroups(listOf(group1, group2))
         }
 
 //        MapManager.instance.map.addPlacemark(Coordinate(60.0229774804831,30.233355569284313))
 
-        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313), listOf(group1)).apply {
-            name = "Точка"
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
         }
 
         objectManager.updateShown()

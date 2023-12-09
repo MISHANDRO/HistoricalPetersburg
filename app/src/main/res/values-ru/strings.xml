@@ -19,4 +19,7 @@
     <string name="all_routes_places">Все</string>
     <string name="routes">Маршруты</string>
     <string name="places">Места</string>
+    <string name="option_menu_save">Сохранить в галерею</string>
+    <string name="image_viewer_of">из</string>
+    <string name="unsuccess_save">Не удалось скачать</string>
 </resources>

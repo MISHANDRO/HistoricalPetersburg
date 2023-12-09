@@ -1,9 +1,8 @@
 package com.example.historicalpetersburg.map.services.location
 
 import android.graphics.Color
-import com.example.historicalpetersburg.GlobalTools
+import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.R
-import com.example.historicalpetersburg.map.MapManager
 import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.RotationType
