@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_images_1">
+        <item>@drawable/menu_bg_png</item>
+        <item>@drawable/piggy</item>
+        <item>@drawable/night</item>
+        <item>https://klike.net/uploads/posts/2023-03/1678681102_3-47.jpg</item>
+        <item>https://cdn.fishki.net/upload/post/2020/07/06/3362802/67fdf29234ab5ff6325c18172e28cde8.jpg</item>
+    </string-array>
+</resources>

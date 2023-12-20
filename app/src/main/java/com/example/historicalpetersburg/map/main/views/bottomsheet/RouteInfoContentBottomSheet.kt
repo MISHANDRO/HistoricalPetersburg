@@ -3,21 +3,24 @@ package com.example.historicalpetersburg.map.main.views.bottomsheet
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.core.view.children
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.historicalpetersburg.activities.FullscreenImageViewerActivity
-import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.R
+import com.example.historicalpetersburg.activities.FullscreenImageViewerActivity
 import com.example.historicalpetersburg.databinding.BottomSheetRouteInfoBinding
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.objects.Route
-import com.example.historicalpetersburg.tools.ImageAdapter
-import com.example.historicalpetersburg.tools.value.ImageVal
+import com.example.historicalpetersburg.tools.GlobalTools
+import com.example.historicalpetersburg.tools.image.ImageAdapter
+import com.example.historicalpetersburg.tools.image.ImageArray
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+
 
 class RouteInfoContentBottomSheet(private val route: Route) : ContentExtraBottomSheetBase() {
     override var peekHeight: Int = 500
@@ -44,36 +47,19 @@ class RouteInfoContentBottomSheet(private val route: Route) : ContentExtraBottom
 
         }
 
-        binding.bottomSheetRouteLongDesc.text = route.longDesc.value
-//        binding.bottomSheetRouteImage.setImageResource(R.drawable.icon_settings)
+//        binding.bottomSheetRouteLongDesc.text = route.longDesc.value
 
         binding.mainContentOfRoute.setOnClickListener {
             bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        val images = arrayOf(ImageVal(R.drawable.menu_bg_png), ImageVal(R.drawable.night),
-            ImageVal(R.drawable.piggy), ImageVal("https://klike.net/uploads/posts/2023-03/1678681102_3-47.jpg"))
-        val adapter = ImageAdapter(
-            images // TODO
-        ).apply {
-            onItemClick = { position ->
-                val intent = Intent(GlobalTools.instance.activity, FullscreenImageViewerActivity::class.java)
-                intent.putExtra("current_position", position)
-                intent.putExtra("current_array", images)
-                GlobalTools.instance.activity.startActivity(intent)
-            }
+        setImages()
 
-            scaleTypeOnItem = ImageView.ScaleType.CENTER_CROP
-        }
+        val buttonLayoutParams = binding.yourButton.layoutParams as RelativeLayout.LayoutParams
+        buttonLayoutParams.topMargin = peekHeight - binding.yourButton.layoutParams.height
+        binding.yourButton.layoutParams = buttonLayoutParams
 
-        binding.bottomSheetRouteImage.adapter = adapter
-
-        binding.bottomSheetRouteImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                val text = "${position + 1} из ${images.size}"
-                binding.numberOfPhoto.text = text
-            }
-        })
+        onSlide(binding.root, 0.0f)
 
         return binding.root
     }
@@ -83,15 +69,51 @@ class RouteInfoContentBottomSheet(private val route: Route) : ContentExtraBottom
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        //        binding.bottomSheetRouteImage.translationY = slideOffset * 100
-//        binding.mainContentOfRoute.translationY = slideOffset * 100
         if (slideOffset < 0) return
         binding.bottomSheetCard.scaleX = (0.5f + (slideOffset * 0.5f))
         binding.bottomSheetCard.scaleY = (0.5f + (slideOffset / 2))
         binding.bottomSheetCard.radius = (1 - slideOffset) * (binding.bottomSheetCard.height / 2)
+
+        binding.yourButton.translationY = (bottomSheet.height - peekHeight) * slideOffset
     }
 
     override fun close() {
+        super.close()
         MapManager.instance.objectManager.zoomShown()
+    }
+
+    private fun setImages() {
+        if (route.imagesArrayId == -1) {
+            binding.bottomSheetCard.visibility = View.GONE
+            return
+        }
+
+        val images = ImageArray(route.imagesArrayId)
+        val adapter = ImageAdapter(
+            images
+        ).apply {
+            onItemClick = { position ->
+
+                val intent = Intent(GlobalTools.instance.activity, FullscreenImageViewerActivity::class.java)
+                intent.putExtra("current_position", position)
+                intent.putExtra("current_array", GlobalTools.instance.getStringArray(route.imagesArrayId))
+                GlobalTools.instance.activity.startActivity(intent)
+            }
+            isZoomableOnItem = false
+
+            scaleTypeOnItem = ImageView.ScaleType.CENTER_CROP
+        }
+
+        binding.bottomSheetRouteImage.adapter = adapter
+        binding.bottomSheetRouteImage.children.find { it is RecyclerView }?.let {
+            (it as RecyclerView).isNestedScrollingEnabled = false
+        }
+
+        binding.bottomSheetRouteImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val text = "${position + 1} из ${images.size}"
+                binding.numberOfPhoto.text = text
+            }
+        })
     }
 }

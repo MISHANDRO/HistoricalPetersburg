@@ -1,6 +1,7 @@
 package com.example.historicalpetersburg.map.services.route
 
-import com.example.historicalpetersburg.map.entities.Route
+import com.example.historicalpetersburg.map.main.objects.Route
+
 
 class InactiveState : IRouteInspectorState {
     override fun moveToStart(route: Route): IRouteInspectorState {

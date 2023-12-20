@@ -3,8 +3,10 @@ package com.example.historicalpetersburg.map.main.objects
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
+import com.example.historicalpetersburg.map.main.views.bottomsheet.RouteInfoContentBottomSheet
 import com.example.historicalpetersburg.tools.value.IValue
 import com.example.historicalpetersburg.tools.value.StringVal
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class Place(
     coordinate: Coordinate,
@@ -29,8 +31,16 @@ class Place(
         }
     }
 
-    override fun select() {
-        TODO("Not yet implemented")
+    override fun select() { // TODO Visitor
+        MapManager.instance.map.zoom(coordinates)
+        MapManager.instance.objectManager.hideAll()
+        show()
+
+        MapManager.instance.mapFragment.bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        MapManager.instance.locationManager.follow = false
+
+//        RouteInfoContentBottomSheet(this).show()
     }
 
     override fun show() {

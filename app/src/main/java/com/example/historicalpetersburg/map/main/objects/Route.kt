@@ -6,6 +6,7 @@ import com.example.historicalpetersburg.map.main.shape.ILine
 import com.example.historicalpetersburg.map.main.views.bottomsheet.RouteInfoContentBottomSheet
 import com.example.historicalpetersburg.tools.value.IValue
 import com.example.historicalpetersburg.tools.value.StringVal
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class Route(
     coordinates: List<Coordinate>
@@ -29,10 +30,14 @@ class Route(
         }
     }
 
-    override fun select() {
+    override fun select() { // TODO отбить гвозди
+        MapManager.instance.locationManager.follow = false
+
         MapManager.instance.map.zoom(coordinates)
         MapManager.instance.objectManager.hideAll()
         show()
+
+        MapManager.instance.mapFragment.bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
         RouteInfoContentBottomSheet(this).show()
     }

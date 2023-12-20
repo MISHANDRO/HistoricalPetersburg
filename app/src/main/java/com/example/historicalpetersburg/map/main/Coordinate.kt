@@ -12,4 +12,13 @@ class Coordinate(var latitude: Double, var longitude: Double) {
     fun toYandexPoint() : Point {
         return Point(latitude, longitude)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is Coordinate) return false
+        return latitude.isApproximatelyEqual(other.latitude) && longitude.isApproximatelyEqual(other.longitude)
+    }
+
+    private fun Double.isApproximatelyEqual(other: Double, epsilon: Double = 1e-5): Boolean {
+        return kotlin.math.abs(this - other) < epsilon
+    }
 }

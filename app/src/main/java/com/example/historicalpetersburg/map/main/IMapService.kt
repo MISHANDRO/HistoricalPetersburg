@@ -1,14 +1,15 @@
 package com.example.historicalpetersburg.map.main
 
-import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.shape.ILine
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
 
 interface IMapService {
-    var zoomPaddingX: Float
-    var zoomPaddingY: Float
+    var zoomPadding: Padding
     var zoomDuration: Float
 
+    val camera: Camera
+
+    fun zoom(step: Float, duration: Float = zoomDuration)
     fun zoom(coordinate: Coordinate, zoomValue: Float, duration: Float = zoomDuration)
     fun zoom(coordinates: List<Coordinate>, duration: Float = zoomDuration)
 

@@ -17,8 +17,10 @@ class ExtraBottomSheet(view: LinearLayout) : IBottomSheet {
                     .commit()
 
                 peekHeight = it.peekHeight
-                maxHeight = it.maxHeight
+//                maxHeight = it.maxHeight
                 halfExpandedRatio = it.halfExpandedRatio
+
+                behavior.isFitToContents = false
             }
         }
 

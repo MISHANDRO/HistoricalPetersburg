@@ -4,7 +4,7 @@ import android.animation.ObjectAnimator
 import android.view.View
 
 class FadeAnimation {
-    private fun fadeOut(view: View, duration: Long) {
+    fun fadeOut(view: View, duration: Long) {
         val fadeOut = ObjectAnimator.ofFloat(view, "alpha", 1.0f, 0.0f)
         fadeOut.duration = duration
 
@@ -17,7 +17,7 @@ class FadeAnimation {
         fadeOut.start()
     }
 
-    private fun fadeIn(view: View, duration: Long) {
+    fun fadeIn(view: View, duration: Long) {
         val fadeOut = ObjectAnimator.ofFloat(view, "alpha", 0.0f, 1.0f)
         fadeOut.duration = duration
 

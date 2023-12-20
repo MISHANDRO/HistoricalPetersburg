@@ -1,7 +1,7 @@
 package com.example.historicalpetersburg.activities
 
 import android.animation.ObjectAnimator
-import android.content.res.Configuration
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -15,32 +15,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.databinding.FullscreenImageViewerBinding
 import com.example.historicalpetersburg.tools.GlobalTools
-import com.example.historicalpetersburg.tools.ImageAdapter
-import com.example.historicalpetersburg.tools.value.ImageVal
-import java.util.Locale
+import com.example.historicalpetersburg.tools.settings.Settings
+import com.example.historicalpetersburg.tools.image.ImageAdapter
+import com.example.historicalpetersburg.tools.image.ImageArray
 
 
 class FullscreenImageViewerActivity : AppCompatActivity() {
 
     private lateinit var binding: FullscreenImageViewerBinding
     private var isFullscreen: Boolean = false
-    private lateinit var images: Array<ImageVal>
+    private lateinit var images: ImageArray
     private lateinit var separatorOf: String
 
     private lateinit var windowInsetsController: WindowInsetsControllerCompat
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
-        setLocale()
+        if (!intent.hasExtra("current_array")) {
+            finish()
+            return
+        }
+
         super.onCreate(savedInstanceState)
 
-        // TODO
         WindowCompat.setDecorFitsSystemWindows(window, false)
         windowInsetsController =
             WindowCompat.getInsetsController(window, window.decorView)
@@ -56,13 +56,10 @@ class FullscreenImageViewerActivity : AppCompatActivity() {
 
         separatorOf = binding.numberOfPhoto.text.toString()
 
-        val currentPosition = intent.getIntExtra("current_position", 0)
-
-        images = intent.getParcelableArrayExtra("current_array",  ImageVal::class.java) as Array<ImageVal>
-
+        images = intent.getStringArrayExtra("current_array")?.let { ImageArray(it) }!!
         binding.fullscreenImageViewer.adapter = images.let { ImageAdapter(it).apply {
             scaleTypeOnItem = ImageView.ScaleType.FIT_CENTER
-            onItemClick = { getStatusBarHeight(); toggleSystemUI() }
+            onItemClick = { toggleSystemUI() }
         } }
 
 //        binding.fullscreenImageViewer.apply {
@@ -79,10 +76,10 @@ class FullscreenImageViewerActivity : AppCompatActivity() {
             }
         })
 
-        binding.fullscreenImageViewer.setCurrentItem(currentPosition, false)
+        binding.fullscreenImageViewer.setCurrentItem(intent.getIntExtra("current_position", 0), false)
 
         binding.toolbar.apply {
-            setPadding(this.paddingLeft, this.paddingTop + (getStatusBarHeight() * 0.8).toInt(),
+            setPadding(this.paddingLeft, this.paddingTop + (GlobalTools.instance.getStatusBarHeight() * 0.8).toInt(),
                 this.paddingRight, this.paddingBottom)
         }
 
@@ -99,7 +96,7 @@ class FullscreenImageViewerActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_download -> {
-                val success = images[binding.fullscreenImageViewer.currentItem].saveToGallery(
+                val success = images[binding.fullscreenImageViewer.currentItem]!!.saveToGallery(
                     this,
                     GlobalTools.instance.getString(R.string.app_name)
                 )
@@ -144,20 +141,7 @@ class FullscreenImageViewerActivity : AppCompatActivity() {
         isFullscreen = !isFullscreen
     }
 
-
-    private fun getStatusBarHeight(): Int {
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        return if (resourceId > 0) {
-            resources.getDimensionPixelSize(resourceId)
-        } else 0
-    }
-
-    private fun setLocale() {
-        println(application.resources.configuration.locale.language)
-        val locale = Locale(application.resources.configuration.locale.language)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        resources.updateConfiguration(config, resources.displayMetrics)
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(Settings.instance.localeHelper.onAttach(newBase))
     }
 }

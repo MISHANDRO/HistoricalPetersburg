@@ -5,16 +5,16 @@ import android.content.SharedPreferences
 import android.os.LocaleList
 import com.example.historicalpetersburg.App
 import com.example.historicalpetersburg.map.MapManager
+import com.example.historicalpetersburg.tools.settings.Settings
 import java.util.Locale
 
 class SettingsChangedListener(private val app: App) : SharedPreferences.OnSharedPreferenceChangeListener {
     private val sync = "QWE"
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key == "lang") {
-            val language = sharedPreferences?.getString(key, "en").toString();
-            app.setLang(language)
-        }
+        if (sharedPreferences == null || key == null) return
+
+        Settings.instance.setValueByKey(sharedPreferences, key)
     }
 }
 

@@ -1,7 +1,6 @@
-package com.example.historicalpetersburg.map.services.location
+package com.example.historicalpetersburg.map.main.location
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -9,10 +8,13 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Button
+import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.tools.GlobalTools
-import com.example.historicalpetersburg.map.main.Coordinate
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -20,22 +22,16 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.SettingsClient
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class AvailableUseLocationProxy(private val child: ILocationManager) : ILocationManager  {
+
+class AvailableUseLocationProxy {
+    private val locationPermissionRequestCode: Int get() = 1
+    private val requestCheckSettings: Int get() = 1000
+
     private var locationRequestResultCallback: (() -> Unit)? = null
 
-    override val curPosition: Coordinate?
-        get() = child.curPosition
-
-    override fun subscribeToLocationUpdate() {
-        withAvailableUseLocation { child.subscribeToLocationUpdate() }
-    }
-
-    override fun unsubscribeToLocationUpdate() {
-        child.unsubscribeToLocationUpdate()
-    }
-
-    private fun withAvailableUseLocation(action: () -> Unit) {
+    fun withAvailableUseLocation(action: () -> Unit) {
         if (!haveLocationPermission()) {
             locationRequestResultCallback = action
             requestPermission()
@@ -107,7 +103,7 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
             }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
+    fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
         if (requestCode == locationPermissionRequestCode && grantResults.isNotEmpty()) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 locationRequestResultCallback?.let { withAvailableUseLocation(it) }
@@ -119,7 +115,7 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
         locationRequestResultCallback = null
     }
 
-    override fun onLocationEnabledResult(requestCode: Int, resultCode: Int) {
+    fun onLocationEnabledResult(requestCode: Int, resultCode: Int) {
         if (requestCode == requestCheckSettings) {
             if (resultCode == Activity.RESULT_OK) {
                 locationRequestResultCallback?.let { withAvailableUseLocation(it) }
@@ -131,38 +127,20 @@ class AvailableUseLocationProxy(private val child: ILocationManager) : ILocation
         locationRequestResultCallback = null
     }
 
-    override fun displayLocation() {
-        child.displayLocation()
-    }
+    private fun alertDialogToRequestPermission() {
 
-    override fun hideLocation() {
-        child.hideLocation()
-    }
+        val bottomSheetDialog = BottomSheetDialog(GlobalTools.instance.activity, R.style.MainBottomSheetDialog)
+        bottomSheetDialog.setContentView(R.layout.info_access_location)
 
-    override fun follow() {
-        withAvailableUseLocation { child.follow() }
-    }
+        bottomSheetDialog.findViewById<Button>(R.id.go_to_settings)?.setOnClickListener {
+            bottomSheetDialog.dismiss()
 
-    override fun notFollow() {
-        child.notFollow()
-    }
-
-
-    private fun alertDialogToRequestPermission() { // TODO не алерт а окно
-        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(GlobalTools.instance.activity)
-        alertDialogBuilder.setTitle("Нужен доступ к уведомлениям")
-        alertDialogBuilder.setMessage("Это приложение требует доступа к уведомлениям для корректной работы.")
-
-        alertDialogBuilder.setPositiveButton("Настройки") { _, _ ->
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri = Uri.fromParts("package", GlobalTools.instance.activity.packageName, null)
             intent.data = uri
             GlobalTools.instance.activity.startActivity(intent)
         }
 
-        alertDialogBuilder.setNegativeButton("Отмена") { _, _ ->
-            GlobalTools.instance.toast("Ну и иди нахуй, еблана кусок TODO")
-        }
-        alertDialogBuilder.show()
+        bottomSheetDialog.show()
     }
 }

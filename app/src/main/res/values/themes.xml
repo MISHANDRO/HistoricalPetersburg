@@ -65,7 +65,14 @@
         <item name="preferenceCategoryTitleTextAppearance">@style/PreferenceCategoryTitleTextAppearance</item>
         <item name="android:textColor">?colorOnPrimary</item>
         <item name="android:textAppearance">?colorOnPrimary</item>
+        <item name="android:textColorSecondary">?colorSecondaryVariant</item>
     </style>
     <!-- End settings custom -->
+
+    <style name="MainBottomSheetDialog" parent="Theme.HistoricalPetersburg">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 
 </resources>

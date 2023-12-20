@@ -8,7 +8,7 @@ import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.PlacemarkMapObject
 
 class YandexPlacemark(
-    private val placemarkObject: PlacemarkMapObject,
+    val placemarkObject: PlacemarkMapObject,
     override val coordinate: Coordinate,
     style: PlacemarkStyle = PlacemarkStyle.Default
 ) : IPlacemark {

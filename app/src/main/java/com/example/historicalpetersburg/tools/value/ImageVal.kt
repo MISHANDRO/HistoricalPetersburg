@@ -3,7 +3,6 @@ package com.example.historicalpetersburg.tools.value
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Environment
 import android.os.Parcelable
@@ -11,7 +10,9 @@ import android.provider.MediaStore
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.example.historicalpetersburg.tools.GlobalTools
+import com.example.historicalpetersburg.tools.anim.FadeAnimation
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.io.File
@@ -23,16 +24,16 @@ class ImageVal(
 ) : IValue<String>, Parcelable {
 
     @IgnoredOnParcel
-    private val target = ImageTarget()
+    private val listener = ImageListener()
 
     private val load: RequestBuilder<Bitmap>?
         get() {
             try {
                 if (id == -1) {
-                    return Glide.with(GlobalTools.instance.activity).asBitmap().load(value)
+                    return Glide.with(GlobalTools.instance.activity).asBitmap().load(value).listener(listener)
                 }
 
-                return Glide.with(GlobalTools.instance.activity).asBitmap().load(id).centerInside()
+                return Glide.with(GlobalTools.instance.activity).asBitmap().load(id).listener(listener)
             } catch (_: Exception) {
                 return null
             }
@@ -47,14 +48,14 @@ class ImageVal(
     }
 
     fun into(view: ImageView) {
-        target.actionResourceReady = { drawable ->
-            view.setImageBitmap(drawable)
+        listener.actionResourceReady = { drawable ->
+//            view.setImageBitmap(drawable)
         }
-        load?.into(target)
+        load?.transition(BitmapTransitionOptions.withCrossFade(200))?.into(view)
     }
 
     fun getBitmap(context: Context, drawableId: Int): Bitmap? {
-        return target.bitmap
+        return listener.bitmap
     }
 
     fun saveToGallery(context: Context, directoryName: String): Boolean {
@@ -77,7 +78,7 @@ class ImageVal(
             uri?.let {
                 resolver.openOutputStream(it).use { outputStream ->
                     if (outputStream != null) {
-                        target.bitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                        listener.bitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
                     }
                 }
 

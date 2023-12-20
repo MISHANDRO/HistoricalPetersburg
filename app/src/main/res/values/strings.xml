@@ -17,6 +17,7 @@
 
     <!-- Preference Titles -->
     <string name="language_title">Language</string>
+    <string name="language_set_title">Select the application language:</string>
     <string name="font_title">Font</string>
     <string name="user_title">User, that is you :)</string>
 
@@ -33,4 +34,8 @@
     <string name="all_routes_places">All</string>
     <string name="routes">Routes</string>
     <string name="places">Places</string>
+
+    <!-- Give access to location-->
+    <string name="give_location_title">I need to know your location!</string>
+    <string name="give_location_text">Let me determine the location so that we can cooperate!</string>
 </resources>

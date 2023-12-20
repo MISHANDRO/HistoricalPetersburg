@@ -22,4 +22,7 @@
     <string name="option_menu_save">Сохранить в галерею</string>
     <string name="image_viewer_of">из</string>
     <string name="unsuccess_save">Не удалось скачать</string>
+    <string name="language_set_title">Выберите язык приложения:</string>
+    <string name="give_location_title">Мне необходимо знать ваше местоположение!</string>
+    <string name="give_location_text">Разрешите мне определять местоположение, чтобы мы могли сотрудничать!</string>
 </resources>

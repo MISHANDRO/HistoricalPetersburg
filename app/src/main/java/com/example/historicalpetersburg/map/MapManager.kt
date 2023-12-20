@@ -3,8 +3,10 @@ package com.example.historicalpetersburg.map
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.HistoricalObjectManager
-import com.example.historicalpetersburg.map.services.location.ILocationManager
+import com.example.historicalpetersburg.map.main.location.ILocationManager
 import com.example.historicalpetersburg.map.main.IMapService
+import com.example.historicalpetersburg.map.main.location.AvailableUseLocationProxy
+import com.example.historicalpetersburg.map.yandex.location.YandexLocationManager
 import com.example.historicalpetersburg.map.yandex.YandexMapService
 import com.example.historicalpetersburg.ui.map.MapFragment
 import com.yandex.mapkit.MapKitFactory
@@ -53,10 +55,8 @@ class MapManager private constructor() {
             instance._mapFragment = mapFragment
             instance._map = YandexMapService(mapView)
 
-//            MapKitFactory.initialize(activity)
-
             instance._objectManager = HistoricalObjectManager()
-//            instance._locationManager = AvailableUseLocationProxy(YandexLocationManager())
+            instance._locationManager = YandexLocationManager(AvailableUseLocationProxy())
 
             MapKitFactory.getInstance().onStart()
             mapView.onStart()
@@ -113,6 +113,58 @@ class MapManager private constructor() {
 
         objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
             name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "Точка"
+            addGroups(listOf(group1))
+        }
+        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+            name.value = "ПОСЛЕДНЯЯ"
             addGroups(listOf(group1))
         }
 

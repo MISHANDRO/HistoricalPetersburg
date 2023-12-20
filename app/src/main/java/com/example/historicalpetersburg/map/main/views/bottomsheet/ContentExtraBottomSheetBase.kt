@@ -24,12 +24,22 @@ abstract class ContentExtraBottomSheetBase : Fragment() {
     abstract fun onStateChanged(bottomSheet: View, newState: Int)
     abstract fun onSlide(bottomSheet: View, slideOffset: Float)
 
-    abstract fun close()
+    open fun close() {
+        MapManager.instance.mapFragment.bottomSheet.behavior.apply {
+            isHideable = false
+            state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
 
     fun show() {
         bottomSheet.apply {
             content = this@ContentExtraBottomSheetBase
             state = BottomSheetBehavior.STATE_COLLAPSED
         }
+        MapManager.instance.mapFragment.bottomSheet.behavior.apply {
+            isHideable = true
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        MapManager.instance.locationManager.follow = false
     }
 }

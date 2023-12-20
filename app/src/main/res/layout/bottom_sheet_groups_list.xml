@@ -6,10 +6,11 @@
 
     android:id="@+id/route_group_bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/background_primary_round_up_10"
     android:orientation="vertical"
     android:paddingHorizontal="5dp"
+    android:paddingBottom="20dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     >
 
@@ -83,20 +84,13 @@
 
     </LinearLayout>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_route_list"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginTop="20dp"
-        android:scrollbars="none">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycle_route_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_list_route" />
-
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:layout_marginVertical="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_list_route" />
 
 </LinearLayout>
 

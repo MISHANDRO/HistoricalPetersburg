@@ -1,7 +1,7 @@
 package com.example.historicalpetersburg.activities
 
+import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
@@ -15,10 +15,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.historicalpetersburg.App
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.databinding.ActivityMainBinding
+import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.tools.GlobalTools
+import com.example.historicalpetersburg.tools.settings.Settings
 import com.example.historicalpetersburg.ui.map.MapFragment
 import com.google.android.material.navigation.NavigationView
-import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as App).mainActivity = this
 
-        setLocale()
         GlobalTools.setup(this, supportFragmentManager)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -76,30 +76,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        MapManager.instance.locationManager.onRequestPermissionsResult(requestCode, grantResults)
+        MapManager.instance.locationManager.proxy?.onRequestPermissionsResult(requestCode, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        MapManager.instance.locationManager.onLocationEnabledResult(requestCode, resultCode)
+        MapManager.instance.locationManager.proxy?.onLocationEnabledResult(requestCode, resultCode)
     }
 
-    private fun setLocale() {
-        println(application.resources.configuration.locale.language)
-        val locale = Locale(application.resources.configuration.locale.language)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        resources.updateConfiguration(config, resources.displayMetrics)
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(Settings.instance.localeHelper.onAttach(newBase))
     }
 }

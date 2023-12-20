@@ -85,6 +85,7 @@ class HistoricalObjectManager {
         listOfShown.forEach { it.show() }
 
         if (coordinates.isEmpty()) return
+        MapManager.instance.locationManager.follow = false
         MapManager.instance.map.zoom(coordinates)
     }
 }
