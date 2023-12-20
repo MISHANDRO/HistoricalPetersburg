@@ -19,9 +19,9 @@ import java.io.File
 
 @Parcelize
 class ImageVal(
-    override var id: Int = -1,
-    override var value: String = ""
-) : IValue<String>, Parcelable {
+    var id: Int = -1,
+    var value: String = ""
+) : Parcelable {
 
     @IgnoredOnParcel
     private val listener = ImageListener()

@@ -1,10 +1,10 @@
 package com.example.historicalpetersburg.map.main.filters
 
-import com.example.historicalpetersburg.map.main.objects.IHistoricalObject
+import com.example.historicalpetersburg.map.main.objects.IHistoricalObjectData
 
 interface IHistoricalObjectFilterChain {
 
     fun addNext(next: IHistoricalObjectFilterChain)
 
-    fun isNormal(historicalObject: IHistoricalObject): Boolean
+    fun isNormal(historicalObject: IHistoricalObjectData): Boolean
 }

@@ -6,8 +6,11 @@ import com.example.historicalpetersburg.map.main.HistoricalObjectManager
 import com.example.historicalpetersburg.map.main.location.ILocationManager
 import com.example.historicalpetersburg.map.main.IMapService
 import com.example.historicalpetersburg.map.main.location.AvailableUseLocationProxy
+import com.example.historicalpetersburg.map.main.objects.Group
+import com.example.historicalpetersburg.map.main.repositories.InMemoryGroupRepository
 import com.example.historicalpetersburg.map.yandex.location.YandexLocationManager
 import com.example.historicalpetersburg.map.yandex.YandexMapService
+import com.example.historicalpetersburg.tools.value.StringText
 import com.example.historicalpetersburg.ui.map.MapFragment
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
@@ -77,13 +80,21 @@ class MapManager private constructor() {
             Coordinate(60.022469267560666, 30.235801487372743)
         )
 
-        val group1 = objectManager.addGroup().apply {
-            name.value = "Категория 1"
-        }
+        val groupRepository = InMemoryGroupRepository()
+        objectManager.groupRepository = groupRepository
 
-        val group2 = objectManager.addGroup().apply {
-            name.value = "Категория 2"
-        }
+        val union1 = groupRepository.addUnion(StringText("By time"), StringText("All the time"))
+        val union2 = groupRepository.addUnion(StringText("By group"), StringText("All"))
+
+
+        groupRepository.addGroup(StringText("The 60s"), union1)
+        groupRepository.addGroup(StringText("The 80s"), union1)
+
+        groupRepository.addGroup(StringText("Movies"), union2)
+        groupRepository.addGroup(StringText("Revolution"), union2)
+
+        val group1 = Group(0, StringText("weewd"))
+        val group2 = Group(1, StringText("weewd"))
         objectManager.addRoute(route).apply {
             name.value = "Маршрут 1 харош"
             addGroups(listOf(group1))

@@ -4,6 +4,8 @@ import android.widget.AdapterView
 import android.widget.BaseAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.databinding.BottomSheetGroupsListBinding
+import com.example.historicalpetersburg.map.main.objects.UnionGroup
+import com.example.historicalpetersburg.map.main.views.adapters.GroupListAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
@@ -21,9 +23,18 @@ class GroupsRoutesListBottomSheet(private val binding: BottomSheetGroupsListBind
         }
     }
 
-    fun setSpinner1(adapter: BaseAdapter, listener: AdapterView.OnItemSelectedListener) {
-        binding.groupListSpinner1.adapter = adapter
+    fun setSpinner1(unionGroup: UnionGroup, listener: AdapterView.OnItemSelectedListener) {
+        binding.spinner1Name.text = unionGroup.name.value
+
+        binding.groupListSpinner1.adapter = GroupListAdapter(unionGroup.allGroupName, unionGroup.groups.toMutableList())
         binding.groupListSpinner1.onItemSelectedListener = listener
+    }
+
+    fun setSpinner2(unionGroup: UnionGroup, listener: AdapterView.OnItemSelectedListener) {
+        binding.spinner2Name.text = unionGroup.name.value
+
+        binding.groupListSpinner2.adapter = GroupListAdapter(unionGroup.allGroupName, unionGroup.groups.toMutableList())
+        binding.groupListSpinner2.onItemSelectedListener = listener
     }
 
     fun setRecycleViewList(adapter: RecyclerView.Adapter<*>) {

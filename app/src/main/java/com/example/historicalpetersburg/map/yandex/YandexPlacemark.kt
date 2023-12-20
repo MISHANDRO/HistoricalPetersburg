@@ -13,6 +13,12 @@ class YandexPlacemark(
     style: PlacemarkStyle = PlacemarkStyle.Default
 ) : IPlacemark {
 
+    override var visibility: Boolean = true
+        set(value) {
+            field = value
+            placemarkObject.isVisible = field
+        }
+
     private val listener = YandexObjectTapListener()
 
     override var style: PlacemarkStyle = style
@@ -35,13 +41,5 @@ class YandexPlacemark(
 
     override fun setAction(action: (Coordinate) -> Boolean) {
         listener.action = action
-    }
-
-    override fun show() {
-        placemarkObject.isVisible = true
-    }
-
-    override fun hide() {
-        placemarkObject.isVisible = false
     }
 }

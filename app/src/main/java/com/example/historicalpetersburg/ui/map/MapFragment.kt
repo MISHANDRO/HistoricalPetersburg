@@ -226,7 +226,7 @@ class MapFragment() : Fragment() {
         binding.mapview.map.isNightModeEnabled = true
 
         val groupRouteAdapter = GroupListAdapter(
-            StringVal(R.string.all_groups_name),
+            StringVal().apply { id = R.string.all_groups_name },
             MapManager.instance.objectManager.groups.toMutableList()
         )
 
@@ -234,11 +234,18 @@ class MapFragment() : Fragment() {
 
         // Filters
         val typeFilterChain = TypeFilterChain()
+
         val groupFilter1 = GroupFilterChain()
+        val groupFilter2 = GroupFilterChain()
 
         typeFilterChain.addNext(groupFilter1)
+        typeFilterChain.addNext(groupFilter2)
 
         MapManager.instance.objectManager.filterChain = typeFilterChain
+        val unions = MapManager.instance.objectManager.groupRepository.getUnions(2)
+        println(unions)
+        println(unions[0].groups.size)
+        println(unions[1].groups.size)
         // End filters
 
         bottomSheet = GroupsRoutesListBottomSheet(binding.bottomSheetMain).apply {
@@ -255,8 +262,13 @@ class MapFragment() : Fragment() {
             }
 
             setSpinner1(
-                groupRouteAdapter,
+                unions[0],
                 GroupListSpinnerSelectedListener(groupFilter1, historicalObjectListAdapter)
+            )
+
+            setSpinner2(
+                unions[1],
+                GroupListSpinnerSelectedListener(groupFilter2, historicalObjectListAdapter)
             )
 
             setRecycleViewList(historicalObjectListAdapter)
@@ -325,11 +337,6 @@ class MapFragment() : Fragment() {
 
         MapManager.instance.locationManager.stopUpdate()
         bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
-
-    override fun onPause() {
-        super.onPause()
-//        extraBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun setupMapManager() {

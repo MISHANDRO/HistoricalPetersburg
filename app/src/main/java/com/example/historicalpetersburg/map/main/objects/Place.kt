@@ -3,17 +3,16 @@ package com.example.historicalpetersburg.map.main.objects
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
-import com.example.historicalpetersburg.map.main.views.bottomsheet.RouteInfoContentBottomSheet
-import com.example.historicalpetersburg.tools.value.IValue
+import com.example.historicalpetersburg.tools.value.Value
 import com.example.historicalpetersburg.tools.value.StringVal
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class Place(
     coordinate: Coordinate,
-) : IHistoricalObject {
-    override var name: IValue<String> = StringVal()
-    override var shortDesc: IValue<String> = StringVal()
-    override var longDesc: IValue<String> = StringVal()
+) : IHistoricalObjectData {
+    override var name: Value<String> = StringVal()
+    override var shortDesc: Value<String> = StringVal()
+    override var longDesc: Value<String> = StringVal()
 
     override val coordinates: List<Coordinate>
         get() = listOf(placemark.coordinate)

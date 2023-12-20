@@ -1,6 +1,6 @@
 package com.example.historicalpetersburg.map.main.filters
 
-import com.example.historicalpetersburg.map.main.objects.IHistoricalObject
+import com.example.historicalpetersburg.map.main.objects.IHistoricalObjectData
 
 abstract class HistoricalObjectFilterChainBase  : IHistoricalObjectFilterChain {
 
@@ -14,7 +14,7 @@ abstract class HistoricalObjectFilterChainBase  : IHistoricalObjectFilterChain {
         }
     }
 
-    override fun isNormal(historicalObject: IHistoricalObject): Boolean {
+    override fun isNormal(historicalObject: IHistoricalObjectData): Boolean {
         if (Handle(historicalObject)) {
             return if (_next == null) {
                 true
@@ -26,5 +26,5 @@ abstract class HistoricalObjectFilterChainBase  : IHistoricalObjectFilterChain {
         return false
     }
 
-    abstract fun Handle(historicalObject: IHistoricalObject): Boolean
+    abstract fun Handle(historicalObject: IHistoricalObjectData): Boolean
 }

@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.R
-import com.example.historicalpetersburg.map.main.objects.IHistoricalObject
+import com.example.historicalpetersburg.map.main.objects.IHistoricalObjectData
 
 
-class HistoricalObjectListAdapter(private val dataSet: MutableList<IHistoricalObject>) :
+class HistoricalObjectListAdapter(private val dataSet: MutableList<IHistoricalObjectData>) :
     RecyclerView.Adapter<HistoricalObjectListAdapter.ViewHolder>() {
 
     var actionOnClick: (() -> Unit)? = null

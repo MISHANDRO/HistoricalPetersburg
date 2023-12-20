@@ -1,6 +1,5 @@
 package com.example.historicalpetersburg.map.main.views.adapters
 
-import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -9,18 +8,15 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.main.objects.Group
-import com.example.historicalpetersburg.tools.value.IValue
-import com.example.historicalpetersburg.tools.value.StringVal
+import com.example.historicalpetersburg.tools.value.Value
 
 class GroupListAdapter(
-    private val nameOfDefaultGroup: IValue<String>,
+    allGroupName: Value<String>,
     private val items: MutableList<Group>
 ) : BaseAdapter()
 {
     init {
-        val defaultGroup = Group().apply {
-            name = nameOfDefaultGroup
-        }
+        val defaultGroup = Group(-1, allGroupName)
         items.add(0, defaultGroup)
     }
 
@@ -42,7 +38,8 @@ class GroupListAdapter(
             .inflate(R.layout.item_list_group, parent, false)
 
         val textView = view.findViewById<TextView>(R.id.group_name_item)
-        textView.text = getItem(position)?.name?.value ?: nameOfDefaultGroup.value
+        textView.text = items[position].name.value
+
         if (position == 0) {
             textView.typeface = Typeface.defaultFromStyle(Typeface.BOLD_ITALIC);
         }

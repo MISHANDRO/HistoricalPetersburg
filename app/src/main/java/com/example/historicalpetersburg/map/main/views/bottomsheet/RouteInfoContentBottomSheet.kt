@@ -15,19 +15,23 @@ import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.activities.FullscreenImageViewerActivity
 import com.example.historicalpetersburg.databinding.BottomSheetRouteInfoBinding
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.main.objects.Route
+import com.example.historicalpetersburg.map.main.objects.RouteData
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.image.ImageAdapter
 import com.example.historicalpetersburg.tools.image.ImageArray
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class RouteInfoContentBottomSheet(private val route: Route) : ContentExtraBottomSheetBase() {
+class RouteInfoContentBottomSheet(private val route: RouteData) : ContentExtraBottomSheetBase() {
     override var peekHeight: Int = 500
     override var maxHeight: Int = 1800
     override var halfExpandedRatio: Float = 0.5f
 
     private lateinit var binding: BottomSheetRouteInfoBinding
+
+    constructor() : this(RouteData(listOf())) { // TODO
+        bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

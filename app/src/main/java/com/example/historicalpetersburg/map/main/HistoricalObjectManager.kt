@@ -3,37 +3,33 @@ package com.example.historicalpetersburg.map.main
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.filters.IHistoricalObjectFilterChain
 import com.example.historicalpetersburg.map.main.objects.Group
-import com.example.historicalpetersburg.map.main.objects.IHistoricalObject
+import com.example.historicalpetersburg.map.main.objects.IHistoricalObjectData
 import com.example.historicalpetersburg.map.main.objects.Place
-import com.example.historicalpetersburg.map.main.objects.Route
+import com.example.historicalpetersburg.map.main.objects.RouteData
+import com.example.historicalpetersburg.map.main.repositories.IGroupRepository
 
 class HistoricalObjectManager {
-    val list = mutableListOf<IHistoricalObject>()
+
+    lateinit var groupRepository : IGroupRepository
+
+    val list = mutableListOf<IHistoricalObjectData>()
     val groups = mutableListOf<Group>()
 
     var filterChain: IHistoricalObjectFilterChain? = null
 
-    val listOfAll: List<IHistoricalObject>
+    val listOfAll: List<IHistoricalObjectData>
         get() = list.toList()
 
-    val listOfShown = mutableListOf<IHistoricalObject>()
+    val listOfShown = mutableListOf<IHistoricalObjectData>()
 
-    val routes: List<Route>
-        get() = list.filterIsInstance<Route>()
+    val routes: List<RouteData>
+        get() = list.filterIsInstance<RouteData>()
 
     val places: List<Place>
         get() = list.filterIsInstance<Place>()
 
-    fun addGroup(): Group {
-        val newGroup = Group().apply {
-            id = groups.size
-        }
-        groups.add(newGroup)
-        return newGroup
-    }
-
-    fun addRoute(coordinates: List<Coordinate>): Route {
-        val newRoute = Route(coordinates)
+    fun addRoute(coordinates: List<Coordinate>): RouteData {
+        val newRoute = RouteData(coordinates)
         list.add(newRoute)
 
         return newRoute
@@ -46,14 +42,14 @@ class HistoricalObjectManager {
         return newPlace
     }
 
-    fun addObjectsToGroupsById(historicalObject: IHistoricalObject, groupIds: List<Int>) {
+    fun addObjectsToGroupsById(historicalObject: IHistoricalObjectData, groupIds: List<Int>) {
         for (id in groupIds) {
             historicalObject.groups += groups[id]
             groups[id].historicalObjects += historicalObject
         }
     }
 
-    fun addObjectsToGroups(historicalObject: IHistoricalObject,  groups: List<Group>) {
+    fun addObjectsToGroups(historicalObject: IHistoricalObjectData, groups: List<Group>) {
         for (group in groups) {
             historicalObject.groups += group
             group.historicalObjects += historicalObject

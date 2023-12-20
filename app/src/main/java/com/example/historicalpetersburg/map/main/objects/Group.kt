@@ -1,19 +1,14 @@
 package com.example.historicalpetersburg.map.main.objects
 
 import com.example.historicalpetersburg.map.main.Coordinate
-import com.example.historicalpetersburg.tools.value.IValue
-import com.example.historicalpetersburg.tools.value.StringVal
+import com.example.historicalpetersburg.tools.value.Value
 
-class Group {
+class Group(
+    val id: Int,
+    val name: Value<String>
+) {
 
-
-    var id: Int = -1
-
-    var name: IValue<String> = StringVal()
-    var shortDesc: IValue<String> = StringVal()
-    var longDesc: IValue<String> = StringVal()
-
-    val historicalObjects: MutableList<IHistoricalObject> = mutableListOf()
+    val historicalObjects: MutableList<IHistoricalObjectData> = mutableListOf()
 
     val coordinates: List<Coordinate>
         get() {

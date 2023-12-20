@@ -11,6 +11,12 @@ class YandexLine(
     style: RouteStyle = RouteStyle.Default
 ) : ILine {
 
+    override var visibility: Boolean = true
+        set(value) {
+            field = value
+            polylineObject.isVisible = field
+        }
+
     private val listener = YandexObjectTapListener()
 
     override var style: RouteStyle = style
@@ -31,13 +37,5 @@ class YandexLine(
 
     override fun setAction(action: (Coordinate) -> Boolean) {
         listener.action = action
-    }
-
-    override fun show() {
-        polylineObject.isVisible = true
-    }
-
-    override fun hide() {
-        polylineObject.isVisible = false
     }
 }

@@ -1,9 +1,9 @@
 package com.example.historicalpetersburg.map.services.route
 
-import com.example.historicalpetersburg.map.main.objects.Route
+import com.example.historicalpetersburg.map.main.objects.RouteData
 
 class StartState : IRouteInspectorState {
-    override fun moveToStart(route: Route): IRouteInspectorState {
+    override fun moveToStart(route: RouteData): IRouteInspectorState {
         TODO("Not yet implemented")
 
     }
