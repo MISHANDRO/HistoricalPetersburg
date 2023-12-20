@@ -1,6 +1,7 @@
 package com.example.historicalpetersburg.map.yandex
 
 import android.graphics.Point
+import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.Camera
 import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.IMapService
@@ -113,7 +114,7 @@ class YandexMapService(private val mapView: MapView) : IMapService {
         val placemarkObject = mapView.map.mapObjects.addPlacemark().apply {
             geometry = coordinate.toYandexPoint()
         }
-        println("olm $placemarkObject")
+
         return YandexPlacemark(placemarkObject, coordinate)
     }
 

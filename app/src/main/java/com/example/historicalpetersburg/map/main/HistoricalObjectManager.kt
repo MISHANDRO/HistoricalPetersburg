@@ -2,71 +2,55 @@ package com.example.historicalpetersburg.map.main
 
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.filters.IHistoricalObjectFilterChain
-import com.example.historicalpetersburg.map.main.objects.Group
 import com.example.historicalpetersburg.map.main.objects.IHistoricalObjectData
-import com.example.historicalpetersburg.map.main.objects.Place
-import com.example.historicalpetersburg.map.main.objects.RouteData
 import com.example.historicalpetersburg.map.main.repositories.IGroupRepository
+import com.example.historicalpetersburg.map.main.repositories.IPlaceRepository
+import com.example.historicalpetersburg.map.main.repositories.IRouteRepository
 
 class HistoricalObjectManager {
 
     lateinit var groupRepository : IGroupRepository
-
-    val list = mutableListOf<IHistoricalObjectData>()
-    val groups = mutableListOf<Group>()
+    lateinit var routeRepository : IRouteRepository
+    lateinit var placeRepository : IPlaceRepository
 
     var filterChain: IHistoricalObjectFilterChain? = null
 
-    val listOfAll: List<IHistoricalObjectData>
-        get() = list.toList()
-
+    lateinit var listOfAll: List<IHistoricalObjectData>
+        private set
     val listOfShown = mutableListOf<IHistoricalObjectData>()
 
-    val routes: List<RouteData>
-        get() = list.filterIsInstance<RouteData>()
+    fun createAll() {
+        for (route in routeRepository.getAllData()) {
+            if (route.coordinates != null) {
+                route.line = MapManager.instance.map.addLine(route.coordinates!!)
+                route.startPlacemark = MapManager.instance.map.addPlacemark(route.coordinates!![0])
+            }
 
-    val places: List<Place>
-        get() = list.filterIsInstance<Place>()
-
-    fun addRoute(coordinates: List<Coordinate>): RouteData {
-        val newRoute = RouteData(coordinates)
-        list.add(newRoute)
-
-        return newRoute
-    }
-
-    fun addPlace(coordinate: Coordinate, groups: List<Group> = emptyList()): Place {
-        val newPlace = Place(coordinate)
-        list.add(newPlace)
-
-        return newPlace
-    }
-
-    fun addObjectsToGroupsById(historicalObject: IHistoricalObjectData, groupIds: List<Int>) {
-        for (id in groupIds) {
-            historicalObject.groups += groups[id]
-            groups[id].historicalObjects += historicalObject
+            listOfShown += route
         }
-    }
+        for (route in placeRepository.getAllData()) {
+            if (route.coordinates != null) {
+                route.placemark = MapManager.instance.map.addPlacemark(route.coordinates!![0])
+            }
 
-    fun addObjectsToGroups(historicalObject: IHistoricalObjectData, groups: List<Group>) {
-        for (group in groups) {
-            historicalObject.groups += group
-            group.historicalObjects += historicalObject
+            listOfShown += route
         }
+
+        listOfShown.sortBy { it.id }
+        listOfAll = listOfShown.toList()
     }
 
-    fun showAll(){
-        list.forEach { it.show() }
+    fun showAll() {
+        listOfAll.forEach { it.visible = true }
     }
 
-    fun hideAll(){
-        list.forEach { it.hide(); println(it) }
+    fun hideAll() {
+        listOfAll.forEach { it.visible = false }
     }
 
     fun updateShown() {
-        listOfShown.clear()
-        list.forEach {
+        listOfShown.clear() // TODO
+        listOfAll.forEach {
             if (filterChain?.isNormal(it) == true) {
                 listOfShown += it
             }
@@ -75,13 +59,14 @@ class HistoricalObjectManager {
 
     fun zoomShown() {
         val coordinates = mutableListOf<Coordinate>()
-        listOfShown.forEach { coordinates += it.coordinates }
+        listOfShown.forEach { if (it.coordinates != null) coordinates += it.coordinates!! }
 
         hideAll()
-        listOfShown.forEach { it.show() }
+        listOfShown.forEach { it.visible = true }
 
         if (coordinates.isEmpty()) return
         MapManager.instance.locationManager.follow = false
+
         MapManager.instance.map.zoom(coordinates)
     }
 }

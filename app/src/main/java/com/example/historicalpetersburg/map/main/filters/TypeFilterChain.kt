@@ -6,7 +6,7 @@ import java.lang.reflect.Type
 class TypeFilterChain : HistoricalObjectFilterChainBase() {
     var type: Type? = null
 
-    override fun Handle(historicalObject: IHistoricalObjectData): Boolean {
+    override fun handle(historicalObject: IHistoricalObjectData): Boolean {
         if (type == null) {
             return true
         }

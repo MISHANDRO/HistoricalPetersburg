@@ -3,7 +3,7 @@ package com.example.historicalpetersburg.map.main.views.listeners
 import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.filters.TypeFilterChain
-import com.example.historicalpetersburg.map.main.objects.Place
+import com.example.historicalpetersburg.map.main.objects.PlaceData
 import com.example.historicalpetersburg.map.main.objects.RouteData
 import com.google.android.material.tabs.TabLayout
 
@@ -21,7 +21,7 @@ class TypeSelectionListener(
                 filter.type = RouteData::class.java
             }
             2 -> { // place
-                filter.type = Place::class.java
+                filter.type = PlaceData::class.java
             }
         }
 

@@ -2,20 +2,19 @@ package com.example.historicalpetersburg.map.main.objects
 
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.Coordinate
-import com.example.historicalpetersburg.map.main.shape.ILine
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
-import com.example.historicalpetersburg.map.main.views.bottomsheet.RouteInfoContentBottomSheet
 import com.example.historicalpetersburg.tools.value.Value
+import com.example.historicalpetersburg.tools.value.StringVal
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class RouteData(
+class PlaceData(
     override val id: Int,
-    val routeId: Int,
+    val placeId: Int,
     override val name: Value<String>,
     override val shortDesc: Value<String>
 ) : IHistoricalObjectData {
 
-    var line: ILine? = null
+    var placemark: IPlacemark? = null
         set(value) {
             field = value
             field?.setAction {
@@ -27,31 +26,19 @@ class RouteData(
             }
         }
 
-    var startPlacemark: IPlacemark? = null
+    override var visible: Boolean = true
         set(value) {
             field = value
-            field?.setAction {
-                select()
-                true
-            }
+            placemark?.visibility = field
         }
 
     override var coordinates: List<Coordinate>? = null
         get() {
-            if (line == null) return field
-            return line!!.coordinates
+            if (placemark == null) return field
+            return listOf(placemark!!.coordinate)
         }
 
-    override var visible: Boolean = true
-        set(value) {
-            field = value
-            line?.visibility = field
-            startPlacemark?.visibility = field
-        }
-
-    override fun select() {
-        MapManager.instance.locationManager.follow = false
-
+    override fun select() { // TODO Visitor
         coordinates?.let {
             MapManager.instance.map.zoom(it)
         }
@@ -60,6 +47,8 @@ class RouteData(
 
         MapManager.instance.mapFragment.bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        RouteInfoContentBottomSheet(this).show()
+        MapManager.instance.locationManager.follow = false
+
+//        RouteInfoContentBottomSheet(this).show()
     }
 }

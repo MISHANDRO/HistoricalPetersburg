@@ -8,8 +8,6 @@
     <string name="menu_setting">Setting</string>
     <string name="menu_achievements">Achievements</string>
 
-    <string name="all_groups_name">All categories</string>
-
     <!-- Fullscreen image viewer -->
     <string name="option_menu_save">Save to gallery</string>
     <string name="image_viewer_of">of</string>

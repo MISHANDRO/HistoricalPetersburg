@@ -15,7 +15,7 @@ abstract class HistoricalObjectFilterChainBase  : IHistoricalObjectFilterChain {
     }
 
     override fun isNormal(historicalObject: IHistoricalObjectData): Boolean {
-        if (Handle(historicalObject)) {
+        if (handle(historicalObject)) {
             return if (_next == null) {
                 true
             } else {
@@ -26,5 +26,5 @@ abstract class HistoricalObjectFilterChainBase  : IHistoricalObjectFilterChain {
         return false
     }
 
-    abstract fun Handle(historicalObject: IHistoricalObjectData): Boolean
+    abstract fun handle(historicalObject: IHistoricalObjectData): Boolean
 }

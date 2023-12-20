@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Unions -->
+    <string name="union_name_1" translatable="false">By time</string>
+    <string name="union_name_2" translatable="false">By group</string>
+
+    <string name="union_all_name_1" translatable="false">All time</string>
+    <string name="union_all_name_2" translatable="false">All</string>
+    <!-- End unions -->
+
+    <!-- Groups -->
+    <string name="group_name_1" translatable="false">The 60s</string>
+    <string name="group_name_2" translatable="false">The 80s</string>
+    <string name="group_name_3" translatable="false">Movies</string>
+    <string name="group_name_4" translatable="false">Revolution</string>
+    <!-- End groups -->
+
+    <!-- Routes -->
+    <string name="route_name_1" translatable="false">Маршрут 1 харош</string>
+    <string name="route_name_2" translatable="false">Еще хорош 2</string>
+    <string name="route_name_3" translatable="false">Бим 3</string>
+
+    <string name="route_short_desc_1" translatable="false"></string>
+    <string name="route_short_desc_2" translatable="false"></string>
+    <string name="route_short_desc_3" translatable="false"></string>
+    <!-- End routes -->
+
+    <!-- Places -->
+    <string name="place_name_1" translatable="false">Точка</string>
+
+    <string name="place_short_desc_1" translatable="false"></string>
+    <!-- End places -->
+</resources>
