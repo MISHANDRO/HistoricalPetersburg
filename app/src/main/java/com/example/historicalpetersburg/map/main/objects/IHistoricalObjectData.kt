@@ -9,6 +9,7 @@ interface IHistoricalObjectData {
     val shortDesc: Value<String>
 
     val coordinates: List<Coordinate>?
+    val icon: Int
 
     var visible: Boolean
     fun select()

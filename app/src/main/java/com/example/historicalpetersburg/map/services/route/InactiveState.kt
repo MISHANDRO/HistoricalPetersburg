@@ -1,22 +1,22 @@
 package com.example.historicalpetersburg.map.services.route
 
+import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.objects.RouteData
 
 
 class InactiveState : IRouteInspectorState {
     override fun moveToStart(route: RouteData): IRouteInspectorState {
-        TODO("Not yet implemented")
+        val firstPart = MapManager.instance.objectManager.routeRepository.getFirstPartByRoute(route)!!
+        // TODO проверяем, где мы, задаем отслеживание
+        return PartState(firstPart)
     }
 
-    override fun moveToPlace(): IRouteInspectorState {
-        TODO("Not yet implemented")
-    }
-
-    override fun moveToPath(): IRouteInspectorState {
-        TODO("Not yet implemented")
+    override fun moveToNextPart(partRouteId: Int): IRouteInspectorState {
+        return this
     }
 
     override fun moveToInactive(): IRouteInspectorState {
-        TODO("Not yet implemented")
+        return this
     }
+
 }

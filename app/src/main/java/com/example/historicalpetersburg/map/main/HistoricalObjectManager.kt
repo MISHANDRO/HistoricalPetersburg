@@ -3,6 +3,7 @@ package com.example.historicalpetersburg.map.main
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.filters.IHistoricalObjectFilterChain
 import com.example.historicalpetersburg.map.main.objects.IHistoricalObjectData
+import com.example.historicalpetersburg.map.main.objects.RouteData
 import com.example.historicalpetersburg.map.main.repositories.IGroupRepository
 import com.example.historicalpetersburg.map.main.repositories.IPlaceRepository
 import com.example.historicalpetersburg.map.main.repositories.IRouteRepository
@@ -20,24 +21,28 @@ class HistoricalObjectManager {
     val listOfShown = mutableListOf<IHistoricalObjectData>()
 
     fun createAll() {
-        for (route in routeRepository.getAllData()) {
-            if (route.coordinates != null) {
-                route.line = MapManager.instance.map.addLine(route.coordinates!!)
-                route.startPlacemark = MapManager.instance.map.addPlacemark(route.coordinates!![0])
-            }
+//        for (route in routeRepository.getAllData()) {
+//            if (route.coordinates != null) {
+//                route.line = MapManager.instance.map.addLine(route.coordinates!!)
+//                route.startPlacemark = MapManager.instance.map.addPlacemark(route.coordinates!![0])
+//            }
+//
+//            listOfShown += route
+//        }
+//        for (place in placeRepository.getAllData()) {
+//            if (place.coordinates != null) {
+//                place.placemark = MapManager.instance.map.addPlacemark(place.coordinates!![0])
+//            }
+//
+//            listOfShown += place
+//        }
 
-            listOfShown += route
-        }
-        for (route in placeRepository.getAllData()) {
-            if (route.coordinates != null) {
-                route.placemark = MapManager.instance.map.addPlacemark(route.coordinates!![0])
-            }
-
-            listOfShown += route
-        }
+        listOfShown += routeRepository.getAllData()
+        listOfShown += placeRepository.getAllData()
 
         listOfShown.sortBy { it.id }
         listOfAll = listOfShown.toList()
+        zoomShown()
     }
 
     fun showAll() {

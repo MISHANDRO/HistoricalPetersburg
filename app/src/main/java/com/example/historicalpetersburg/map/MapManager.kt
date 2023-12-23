@@ -7,6 +7,7 @@ import com.example.historicalpetersburg.map.main.location.AvailableUseLocationPr
 import com.example.historicalpetersburg.map.main.repositories.SqliteGroupRepository
 import com.example.historicalpetersburg.map.main.repositories.SqlitePlaceRepository
 import com.example.historicalpetersburg.map.main.repositories.SqliteRouteRepository
+import com.example.historicalpetersburg.map.services.route.RouteInspector
 import com.example.historicalpetersburg.map.yandex.location.YandexLocationManager
 import com.example.historicalpetersburg.map.yandex.YandexMapService
 import com.example.historicalpetersburg.tools.DbHelper
@@ -17,13 +18,10 @@ import com.yandex.mapkit.mapview.MapView
 
 class MapManager private constructor() {
     private var _mapFragment: MapFragment? = null
-
     private var _map: IMapService? = null
-
     private var _objectManager: HistoricalObjectManager? = null
-
     private var _locationManager: ILocationManager? = null
-
+    private var _routeInspector: RouteInspector? = null
 
     val mapFragment: MapFragment
         get() = _mapFragment!!
@@ -36,6 +34,9 @@ class MapManager private constructor() {
 
     val locationManager: ILocationManager
         get() = _locationManager!!
+
+    val routeInspector: RouteInspector
+        get() = _routeInspector!!
 
     companion object {
         private val instanceObj: MapManager by lazy { MapManager() }

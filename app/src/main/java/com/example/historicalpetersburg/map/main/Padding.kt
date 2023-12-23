@@ -1,8 +1,8 @@
 package com.example.historicalpetersburg.map.main
 
 class Padding {
-    var top = 50f
-    var right = 50f
-    var bottom = 50f
-    var left = 50f
+    var top = 70f
+    var right = 70f
+    var bottom = 70f
+    var left = 70f
 }

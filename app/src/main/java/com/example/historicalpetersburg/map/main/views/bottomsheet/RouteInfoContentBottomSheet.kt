@@ -41,29 +41,21 @@ class RouteInfoContentBottomSheet(private val routeData: RouteData?) : ContentEx
         inflater.inflate(R.layout.bottom_sheet_route_info, container, false)
 
         binding = BottomSheetRouteInfoBinding.inflate(inflater, container, false)
-//
-//        binding.bottomSheetRouteName.text = route.name.value
-//
-//        binding.bottomSheetRouteName.setOnClickListener {
-//            val uri: Uri = Uri.parse("geo:40.7128,-74.0060")
-//            val mapIntent = Intent(Intent.ACTION_VIEW, uri)
-//            startActivity(mapIntent)
-//
-//        }
-//
-////        binding.bottomSheetRouteLongDesc.text = route.longDesc.value
-//
-//        binding.mainContentOfRoute.setOnClickListener {
-//            bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
-//        }
-//
-//        setImages()
-//
-//        val buttonLayoutParams = binding.yourButton.layoutParams as RelativeLayout.LayoutParams
-//        buttonLayoutParams.topMargin = peekHeight - binding.yourButton.layoutParams.height
-//        binding.yourButton.layoutParams = buttonLayoutParams
-//
-//        onSlide(binding.root, 0.0f)
+
+        val buttonLayoutParams = binding.startButton.layoutParams as RelativeLayout.LayoutParams
+        buttonLayoutParams.topMargin = peekHeight - binding.startButton.layoutParams.height
+        binding.startButton.layoutParams = buttonLayoutParams
+        onSlide(binding.root, 0.0f)
+
+        buildRouteContent()
+
+        binding.closeBtn.setOnClickListener {
+            bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.startButton.setOnClickListener {
+            startRoute()
+        }
 
         return binding.root
     }
@@ -78,12 +70,36 @@ class RouteInfoContentBottomSheet(private val routeData: RouteData?) : ContentEx
         binding.bottomSheetCard.scaleY = (0.5f + (slideOffset / 2))
         binding.bottomSheetCard.radius = (1 - slideOffset) * (binding.bottomSheetCard.height / 2)
 
-        binding.yourButton.translationY = (bottomSheet.height - peekHeight) * slideOffset
+        binding.startButton.translationY = (bottomSheet.height - peekHeight) * slideOffset
     }
 
     override fun close() {
         super.close()
         MapManager.instance.objectManager.zoomShown()
+    }
+
+    private fun startRoute() {
+//        MapManager.instance.routeInspector.start(routeData!!)
+//        if (MapManager.)
+    }
+
+    private fun buildRouteContent() {
+        binding.bottomSheetRouteName.text = routeData?.name.toString()
+
+        // TODO собрать инфу как надо
+        //        binding.bottomSheetRouteName.setOnClickListener {
+//            val uri: Uri = Uri.parse("geo:40.7128,-74.0060")
+//            val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+//            startActivity(mapIntent)
+//        }
+//
+//        binding.bottomSheetRouteLongDesc.text = route.longDesc.value
+//
+//        binding.mainContentOfRoute.setOnClickListener {
+//            bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+//        }
+//
+//        setImages()
     }
 
     private fun setImages() {

@@ -7,7 +7,14 @@ class RouteInspector {
 
     private var state: IRouteInspectorState = InactiveState()
 
-    fun start(route: RouteData) {
+    val isActive: Boolean
+        get() = state !is InactiveState
 
+    fun start(route: RouteData) {
+        state = state.moveToStart(route)
+    }
+
+    fun stop() {
+        state = state.moveToInactive()
     }
 }

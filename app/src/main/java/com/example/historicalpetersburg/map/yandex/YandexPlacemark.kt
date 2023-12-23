@@ -1,11 +1,14 @@
 package com.example.historicalpetersburg.map.yandex
 
+import android.graphics.PointF
+import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.PlacemarkMapObject
+import com.yandex.mapkit.map.RotationType
 
 class YandexPlacemark(
     val placemarkObject: PlacemarkMapObject,
@@ -19,24 +22,31 @@ class YandexPlacemark(
             placemarkObject.isVisible = field
         }
 
+    override var direction: Float
+        get() = placemarkObject.direction
+        set(value) { placemarkObject.direction = value }
+
     private val listener = YandexObjectTapListener()
 
     override var style: PlacemarkStyle = style
         set(value) {
             field = value
-            placemarkObject.setIcon(
-                GlobalTools.instance.getImage(value.imageId),
-                IconStyle().apply {
-                    scale = value.scale
-                    flat = true // TODO как лучше?
-                     // rotationType = RotationType.ROTATE TODO хрень или как?
-                }
-            )
-    }
+            for (icon in style.icons) {
+                placemarkObject.useCompositeIcon().setIcon(
+                    icon.toString(),
+                    GlobalTools.instance.getImage(icon.imageId),
+                    IconStyle().apply {
+                        scale = icon.scale
+                        flat = icon.flat
+                        anchor = PointF(icon.anchorX, icon.anchorY)
+                        rotationType = RotationType.ROTATE
+                    }
+                )
+            }
+        }
 
     init {
         placemarkObject.addTapListener(listener)
-        this.style = style
     }
 
     override fun setAction(action: (Coordinate) -> Boolean) {

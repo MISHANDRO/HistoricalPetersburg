@@ -3,6 +3,7 @@ package com.example.historicalpetersburg.map.main.views.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.R
@@ -15,11 +16,8 @@ class HistoricalObjectListAdapter(private val dataSet: MutableList<IHistoricalOb
     var actionOnClick: (() -> Unit)? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView
-
-        init {
-            textView = view.findViewById(R.id.route_name_item)
-        }
+        val imageView: ImageView = view.findViewById(R.id.image_item)
+        val textView: TextView = view.findViewById(R.id.name_item)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -31,6 +29,7 @@ class HistoricalObjectListAdapter(private val dataSet: MutableList<IHistoricalOb
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView.text = dataSet[position].name.value
+        viewHolder.imageView.setImageResource(dataSet[position].icon)
 
         val route = dataSet[position];
         viewHolder.itemView.setOnClickListener {

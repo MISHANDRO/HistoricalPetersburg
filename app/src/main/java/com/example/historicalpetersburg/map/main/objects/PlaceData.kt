@@ -38,6 +38,8 @@ class PlaceData(
             return listOf(placemark!!.coordinate)
         }
 
+    override var icon: Int = -1
+
     override fun select() { // TODO Visitor
         coordinates?.let {
             MapManager.instance.map.zoom(it)

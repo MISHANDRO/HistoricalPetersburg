@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -15,24 +14,21 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.databinding.FragmentMapBinding
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.filters.GroupFilterChain
 import com.example.historicalpetersburg.map.main.filters.TypeFilterChain
-import com.example.historicalpetersburg.map.main.views.adapters.GroupListAdapter
 import com.example.historicalpetersburg.map.main.views.adapters.HistoricalObjectListAdapter
 import com.example.historicalpetersburg.map.main.views.behaviors.ListBottomSheetBehaviorCallback
 import com.example.historicalpetersburg.map.main.views.bottomsheet.ExtraBottomSheet
-import com.example.historicalpetersburg.map.main.views.bottomsheet.GroupsRoutesListBottomSheet
+import com.example.historicalpetersburg.map.main.views.bottomsheet.HistoricalObjectListBottomSheet
 import com.example.historicalpetersburg.map.main.views.listeners.GroupListSpinnerSelectedListener
 import com.example.historicalpetersburg.map.main.views.listeners.TypeSelectionListener
 import com.example.historicalpetersburg.tools.GlobalTools
-import com.example.historicalpetersburg.tools.value.StringVal
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.util.Timer
 import java.util.TimerTask
 
 
-class MapFragment() : Fragment() {
+class MapFragment : Fragment() {
     private var savedView: View? = null
 
     private var _binding: FragmentMapBinding? = null
@@ -40,7 +36,7 @@ class MapFragment() : Fragment() {
 
     private var timer: Timer? = null
 
-    lateinit var bottomSheet: GroupsRoutesListBottomSheet
+    lateinit var bottomSheet: HistoricalObjectListBottomSheet
     lateinit var extraBottomSheet: ExtraBottomSheet
 
     @SuppressLint("ClickableViewAccessibility")
@@ -240,7 +236,7 @@ class MapFragment() : Fragment() {
         val unions = MapManager.instance.objectManager.groupRepository.getUnions(2)
         // End filters
 
-        bottomSheet = GroupsRoutesListBottomSheet(binding.bottomSheetMain).apply {
+        bottomSheet = HistoricalObjectListBottomSheet(binding.bottomSheetMain).apply {
             peekHeight = 250
 
             state = BottomSheetBehavior.STATE_COLLAPSED
@@ -303,16 +299,22 @@ class MapFragment() : Fragment() {
         MapManager.instance.map.addCameraPositionChangedListener {
             MapManager.instance.locationManager.follow = false
         }
+
         MapManager.instance.map.apply {
-            zoomPadding.right += (binding.zoomInButton.layoutParams.width + binding.mapToolsWindow.marginEnd).toFloat()
+            zoomPadding.right = (binding.zoomInButton.layoutParams.width + binding.mapToolsWindow.marginEnd).toFloat()
+            zoomPadding.top = 100f
+            zoomPadding.bottom = 450f // TODO
         }
+
         MapManager.instance.locationManager.actionsToFollowChange.add {
             if (it) {
-                binding.zoomLocationButton.setImageDrawable(resources.getDrawable(R.drawable.arrow1))
+                binding.zoomLocationButton.setImageResource(R.drawable.ic_arrow)
             } else {
-                binding.zoomLocationButton.setImageDrawable(resources.getDrawable(R.drawable.button_nav))
+                binding.zoomLocationButton.setImageResource(R.drawable.button_nav)
             }
         }
+
+        MapManager.instance.objectManager.zoomShown()
 
         return root
     }
@@ -321,7 +323,8 @@ class MapFragment() : Fragment() {
         super.onStart()
 
         MapManager.instance.locationManager.startUpdate()
-        MapManager.instance.locationManager.zoomInPosition()
+        MapManager.instance.objectManager.zoomShown()
+//        MapManager.instance.locationManager.zoomInPosition()
     }
 
     override fun onStop() {
@@ -329,6 +332,11 @@ class MapFragment() : Fragment() {
 
         MapManager.instance.locationManager.stopUpdate()
         bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MapManager.instance.routeInspector.stop()
     }
 
     private fun setupMapManager() {

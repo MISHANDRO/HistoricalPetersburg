@@ -49,6 +49,8 @@ class RouteData(
             startPlacemark?.visibility = field
         }
 
+    override var icon: Int = -1
+
     override fun select() {
         MapManager.instance.locationManager.follow = false
 

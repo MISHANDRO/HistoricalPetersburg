@@ -61,7 +61,6 @@ class YandexMapService(private val mapView: MapView) : IMapService {
             camera.tilt
         )
 
-
         mapView.map.move(position, Animation(Animation.Type.SMOOTH, duration), null)
     }
 
@@ -71,23 +70,22 @@ class YandexMapService(private val mapView: MapView) : IMapService {
         }
 
         if (coordinates.size == 1) {
-            zoom(coordinates[0], 10f, duration)
+            zoom(coordinates[0], 16f, duration)
             return
         }
 
-        val points = coordinates.map { it.toYandexPoint() }
+        val points = coordinates.map { it.toYandexPoint() }.toMutableList()
+
+        mapView.mapWindow.focusRect = ScreenRect(
+            ScreenPoint(zoomPadding.left, zoomPadding.top),
+            ScreenPoint(
+                mapView.mapWindow.width().toFloat() - zoomPadding.right,
+                mapView.mapWindow.height().toFloat() - zoomPadding.bottom,
+            )
+        )
 
         val position = mapView.map.cameraPosition(
             Geometry.fromPolyline(Polyline(points)),
-            camera.azimuth,
-            camera.tilt,
-            ScreenRect(
-                ScreenPoint(zoomPadding.top, zoomPadding.left),
-                ScreenPoint(
-                    mapView.mapWindow.width().toFloat() - zoomPadding.right,
-                    mapView.mapWindow.height().toFloat() - zoomPadding.bottom,
-                )
-            )
         )
 
         mapView.map.move(position, Animation(Animation.Type.SMOOTH, duration), null)

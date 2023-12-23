@@ -1,7 +1,6 @@
 package com.example.historicalpetersburg.map.main.views.bottomsheet
 
 import android.widget.AdapterView
-import android.widget.BaseAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.historicalpetersburg.databinding.BottomSheetGroupsListBinding
 import com.example.historicalpetersburg.map.main.objects.UnionGroup
@@ -9,7 +8,7 @@ import com.example.historicalpetersburg.map.main.views.adapters.GroupListAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class GroupsRoutesListBottomSheet(private val binding: BottomSheetGroupsListBinding) :
+class HistoricalObjectListBottomSheet(private val binding: BottomSheetGroupsListBinding) :
     IBottomSheet {
     override val behavior = BottomSheetBehavior.from(binding.routeGroupBottomSheet)
 
