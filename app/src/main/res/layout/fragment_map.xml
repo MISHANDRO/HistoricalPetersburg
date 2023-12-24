@@ -116,20 +116,4 @@
         layout="@layout/bottom_sheet_groups_list"
         />
 
-    <LinearLayout
-        android:id="@+id/bottom_sheet_other"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="?colorPrimary"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        >
-
-        <FrameLayout
-            android:id="@+id/bottom_sheet_other_content_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

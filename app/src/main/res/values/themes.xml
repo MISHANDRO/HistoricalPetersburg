@@ -18,6 +18,8 @@
         <item name="preferenceTheme">@style/SettingsTheme</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:textColorSecondary">?colorSecondaryVariant</item>
+
+        <item name="bottomSheetDialogTheme">@style/MainBottomSheetDialog</item>
     </style>
 
     <style name="SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">

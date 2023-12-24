@@ -5,6 +5,7 @@ import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.shape.ILine
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
 import com.example.historicalpetersburg.map.main.views.bottomsheet.RouteInfoContentBottomSheet
+import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.value.Value
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -62,6 +63,7 @@ class RouteData(
 
         MapManager.instance.mapFragment.bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        RouteInfoContentBottomSheet(this).show()
+        RouteInfoContentBottomSheet(this)
+            .show(GlobalTools.instance.fragmentManager)
     }
 }

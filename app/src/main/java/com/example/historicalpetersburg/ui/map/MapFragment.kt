@@ -18,7 +18,6 @@ import com.example.historicalpetersburg.map.main.filters.GroupFilterChain
 import com.example.historicalpetersburg.map.main.filters.TypeFilterChain
 import com.example.historicalpetersburg.map.main.views.adapters.HistoricalObjectListAdapter
 import com.example.historicalpetersburg.map.main.views.behaviors.ListBottomSheetBehaviorCallback
-import com.example.historicalpetersburg.map.main.views.bottomsheet.ExtraBottomSheet
 import com.example.historicalpetersburg.map.main.views.bottomsheet.HistoricalObjectListBottomSheet
 import com.example.historicalpetersburg.map.main.views.listeners.GroupListSpinnerSelectedListener
 import com.example.historicalpetersburg.map.main.views.listeners.TypeSelectionListener
@@ -37,7 +36,6 @@ class MapFragment : Fragment() {
     private var timer: Timer? = null
 
     lateinit var bottomSheet: HistoricalObjectListBottomSheet
-    lateinit var extraBottomSheet: ExtraBottomSheet
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -270,8 +268,6 @@ class MapFragment : Fragment() {
         binding.typeSelection.addOnTabSelectedListener(
             TypeSelectionListener(typeFilterChain, historicalObjectListAdapter)
         )
-
-        extraBottomSheet = ExtraBottomSheet(binding.bottomSheetOther)
 
         binding.zoomInButton.setOnTouchListener { _, event ->
             when (event.action) {

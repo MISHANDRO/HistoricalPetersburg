@@ -4,7 +4,7 @@ import android.widget.LinearLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 interface IBottomSheet {
-    val behavior: BottomSheetBehavior<LinearLayout>
+    val behavior: BottomSheetBehavior<*>
 
     var peekHeight: Int
         get() = behavior.peekHeight
