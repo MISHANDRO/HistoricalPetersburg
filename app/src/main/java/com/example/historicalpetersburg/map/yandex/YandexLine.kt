@@ -1,7 +1,7 @@
 package com.example.historicalpetersburg.map.yandex
 
 import com.example.historicalpetersburg.map.main.shape.ILine
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.shape.style.RouteStyle
 import com.yandex.mapkit.map.PolylineMapObject
 

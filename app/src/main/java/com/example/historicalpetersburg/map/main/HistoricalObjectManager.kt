@@ -2,8 +2,8 @@ package com.example.historicalpetersburg.map.main
 
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.filters.IHistoricalObjectFilterChain
+import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.objects.IHistoricalObjectData
-import com.example.historicalpetersburg.map.main.objects.RouteData
 import com.example.historicalpetersburg.map.main.repositories.IGroupRepository
 import com.example.historicalpetersburg.map.main.repositories.IPlaceRepository
 import com.example.historicalpetersburg.map.main.repositories.IRouteRepository

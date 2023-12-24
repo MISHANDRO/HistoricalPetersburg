@@ -1,6 +1,5 @@
 package com.example.historicalpetersburg.map.main.objects
 
-import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.tools.value.Value
 
 class Group(

@@ -1,8 +1,9 @@
 package com.example.historicalpetersburg.map.yandex.location
 
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.location.AvailableUseLocationProxy
 import com.example.historicalpetersburg.map.main.location.ILocationManager
+import com.example.historicalpetersburg.map.main.location.LocationUpdateListener
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.location.FilteringMode
 import com.yandex.mapkit.location.LocationManager
@@ -32,18 +33,22 @@ class YandexLocationManager(override val proxy: AvailableUseLocationProxy?) : IL
         }
 
     override var actionsToFollowChange = mutableListOf<(Boolean) -> Unit>()
+    override var locationListeners = mutableListOf<LocationUpdateListener>()
 
     override val curPosition: Coordinate?
-        get() = Coordinate.fromYandexPoint(locationListener.curPosition)
+        get() {
+            proxy?.withAvailableUseLocation {}
+            return Coordinate.fromYandexPoint(locationListener.curPosition)
+        }
 
     private val locationManager: LocationManager = MapKitFactory.getInstance().createLocationManager(
         LocationActivityType.PEDESTRIAN
     )
-    private var locationListener = YandexLocationListener()
+    private var locationListener = YandexLocationListener(locationListeners)
 
     override fun startUpdate() {
         proxy?.withAvailableUseLocation { }
-        locationManager.subscribeForLocationUpdates(0.0, 1000, 0.0, false, FilteringMode.OFF, locationListener);
+        locationManager.subscribeForLocationUpdates(0.0, 0, 0.0, false, FilteringMode.OFF, locationListener);
         locationManager.requestSingleUpdate(locationListener)
     }
 

@@ -7,7 +7,7 @@ import com.example.historicalpetersburg.map.main.location.AvailableUseLocationPr
 import com.example.historicalpetersburg.map.main.repositories.SqliteGroupRepository
 import com.example.historicalpetersburg.map.main.repositories.SqlitePlaceRepository
 import com.example.historicalpetersburg.map.main.repositories.SqliteRouteRepository
-import com.example.historicalpetersburg.map.services.route.RouteInspector
+import com.example.historicalpetersburg.map.main.routeinspector.RouteInspector
 import com.example.historicalpetersburg.map.yandex.location.YandexLocationManager
 import com.example.historicalpetersburg.map.yandex.YandexMapService
 import com.example.historicalpetersburg.tools.DbHelper
@@ -62,15 +62,11 @@ class MapManager private constructor() {
             instance._objectManager = HistoricalObjectManager()
             instance._locationManager = YandexLocationManager(AvailableUseLocationProxy())
 
+            instance._routeInspector = RouteInspector()
+
             MapKitFactory.getInstance().onStart()
             mapView.onStart()
         }
-    }
-
-    fun clear() {
-        _map = null
-        _objectManager = null
-        _locationManager = null
     }
 
     fun createDefaultRoutes() {

@@ -1,6 +1,5 @@
 package com.example.historicalpetersburg.map.main.repositories
 
-import com.example.historicalpetersburg.map.main.Coordinate
 import com.example.historicalpetersburg.map.main.objects.PartRoute
 import com.example.historicalpetersburg.map.main.objects.RouteData
 

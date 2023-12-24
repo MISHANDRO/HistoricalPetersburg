@@ -1,5 +1,8 @@
 package com.example.historicalpetersburg.map.main
 
+import com.example.historicalpetersburg.map.main.models.Camera
+import com.example.historicalpetersburg.map.main.models.Coordinate
+import com.example.historicalpetersburg.map.main.models.Padding
 import com.example.historicalpetersburg.map.main.shape.ILine
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
 
@@ -20,4 +23,6 @@ interface IMapService {
     fun deleteObject(mapObject: Any)
 
     fun addCameraPositionChangedListener(action: () -> Unit)
+
+    fun getDistance(coordinate1: Coordinate, coordinate2: Coordinate): Long
 }

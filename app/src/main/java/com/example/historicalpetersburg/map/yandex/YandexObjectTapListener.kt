@@ -1,6 +1,6 @@
 package com.example.historicalpetersburg.map.yandex
 
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.MapObject
 import com.yandex.mapkit.map.MapObjectTapListener

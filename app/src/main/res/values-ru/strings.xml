@@ -24,4 +24,7 @@
     <string name="language_set_title">Выберите язык приложения:</string>
     <string name="give_location_title">Мне необходимо знать ваше местоположение!</string>
     <string name="give_location_text">Разрешите мне определять местоположение, чтобы мы могли сотрудничать!</string>
+    <string name="start_route_btn">Начать маршрут</string>
+    <string name="finish_route_btn">Завершить маршрут</string>
+    <string name="continue_route_btn">Перейти дальше</string>
 </resources>

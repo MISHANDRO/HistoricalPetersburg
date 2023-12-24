@@ -10,6 +10,6 @@ enum class PlacemarkStyle(
         PlacemarkIcon(R.drawable.ic_arrow, false,0.7f, 0.5f, 0.9f)
     )),
     Start1(arrayOf(
-        PlacemarkIcon(R.drawable.ic_arrow, false,0.7f, 0.5f, 0.5f)
+        PlacemarkIcon(R.drawable.ic_arrow, true,0.7f, 0.5f, 0.5f)
     ))
 }

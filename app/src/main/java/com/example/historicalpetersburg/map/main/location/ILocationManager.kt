@@ -1,6 +1,6 @@
 package com.example.historicalpetersburg.map.main.location
 
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
 
 
 interface ILocationManager {
@@ -11,6 +11,7 @@ interface ILocationManager {
     var follow: Boolean
     var displayLocation: Boolean
     var actionsToFollowChange: MutableList<((Boolean) -> Unit)>
+    var locationListeners: MutableList<LocationUpdateListener>
 
     fun startUpdate()
     fun stopUpdate()

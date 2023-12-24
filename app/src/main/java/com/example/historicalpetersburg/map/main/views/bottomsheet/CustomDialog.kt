@@ -55,6 +55,10 @@ abstract class CustomDialog : Fragment() {
             .commit()
     }
 
+    fun close() {
+        behavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     fun onStateChanged(bottomSheet: View, newState: Int) {}
     open fun onSlide(bottomSheet: View, slideOffset: Float) {}
 }

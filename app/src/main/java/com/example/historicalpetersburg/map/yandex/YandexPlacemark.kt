@@ -1,10 +1,9 @@
 package com.example.historicalpetersburg.map.yandex
 
 import android.graphics.PointF
-import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
 import com.example.historicalpetersburg.tools.GlobalTools
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.PlacemarkMapObject

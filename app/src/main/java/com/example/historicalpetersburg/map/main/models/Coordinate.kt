@@ -1,4 +1,4 @@
-package com.example.historicalpetersburg.map.main
+package com.example.historicalpetersburg.map.main.models
 
 import com.yandex.mapkit.geometry.Point
 

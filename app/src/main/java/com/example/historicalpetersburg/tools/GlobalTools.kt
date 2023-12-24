@@ -49,8 +49,8 @@ class GlobalTools {
     }
 
 
-    fun toast(message: String, length: Int = Toast.LENGTH_SHORT) {
-        Toast.makeText(activity, message, length).show()
+    fun toast(message: Any, length: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(activity, message.toString(), length).show()
     }
 
     fun getString(id: Int): String {

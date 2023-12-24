@@ -1,10 +1,9 @@
 package com.example.historicalpetersburg.map.yandex.location
 
 import android.animation.ValueAnimator
-import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.main.Camera
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
+import com.example.historicalpetersburg.map.main.location.LocationUpdateListener
 import com.example.historicalpetersburg.map.yandex.YandexPlacemark
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.Location
@@ -12,7 +11,9 @@ import com.yandex.mapkit.location.LocationListener
 import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.map.PlacemarkMapObject
 
-class YandexLocationListener : LocationListener {
+class YandexLocationListener(
+    private val listeners: MutableList<LocationUpdateListener>
+) : LocationListener {
 
     private var curPositionMapObject: PlacemarkMapObject? = null
     private var animator = ValueAnimator.ofFloat(0f, 1f).apply {
@@ -45,6 +46,7 @@ class YandexLocationListener : LocationListener {
         }
 
         curPosition = location.position
+        listeners.forEach { it.onLocationUpdated(Coordinate.fromYandexPoint(curPosition)!!) }
 
         animator.cancel()
         animator.start()
@@ -55,15 +57,14 @@ class YandexLocationListener : LocationListener {
     }
 
     override fun onLocationStatusUpdated(locationStatus: LocationStatus) {
-        println(locationStatus.name)
         if (locationStatus == LocationStatus.NOT_AVAILABLE) {
             curPosition = null
             displayLocation = false
-            GlobalTools.instance.toast("Не доступно")
         } else {
             displayLocation = true
-            GlobalTools.instance.toast("Доступно")
         }
+
+        listeners.forEach { it.onLocationStatusUpdated(locationStatus != LocationStatus.NOT_AVAILABLE) }
     }
 
     fun zoomInPosition() {

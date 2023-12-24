@@ -36,4 +36,9 @@
     <!-- Give access to location-->
     <string name="give_location_title">I need to know your location!</string>
     <string name="give_location_text">Let me determine the location so that we can cooperate!</string>
+
+    <!-- Route message-->
+    <string name="start_route_btn">Start go to route</string>
+    <string name="continue_route_btn">Go to next point</string>
+    <string name="finish_route_btn">Finish route</string>
 </resources>

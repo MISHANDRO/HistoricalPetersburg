@@ -3,7 +3,7 @@ package com.example.historicalpetersburg.map.main.repositories
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.objects.PartRoute
 import com.example.historicalpetersburg.map.main.objects.RouteData
 import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
@@ -11,7 +11,6 @@ import com.example.historicalpetersburg.map.main.shape.style.RouteStyle
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.image.ImageArray
 import com.example.historicalpetersburg.tools.value.StringId
-import java.lang.Math.toDegrees
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -100,6 +99,14 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
 
     override fun getFirstPartByRoute(route: RouteData): PartRoute? {
         val db = sqlite.readableDatabase
+        println(route.routeId)
+        println(route.routeId)
+        println(route.routeId)
+        println(route.routeId)
+        println(route.routeId)
+        println(route.routeId)
+        println(route.routeId)
+        println(route.routeId)
         val query = """
             SELECT
                 PartRouteId
@@ -138,7 +145,7 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
                     LEAD(PartRouteId) OVER(PARTITION BY RouteId) AS NextId
                 FROM PartsRoute
             )
-            WHERE PartRouteId = 3
+            WHERE PartRouteId = $partRouteId
             LIMIT 1
         """.trimIndent()
 

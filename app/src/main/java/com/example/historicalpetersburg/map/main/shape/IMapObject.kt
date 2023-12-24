@@ -1,6 +1,6 @@
 package com.example.historicalpetersburg.map.main.shape
 
-import com.example.historicalpetersburg.map.main.Coordinate
+import com.example.historicalpetersburg.map.main.models.Coordinate
 
 interface IMapObject {
     var visibility: Boolean

@@ -44,6 +44,8 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        println(savedView)
+
         if (savedView != null) {
             return savedView as View
         }
