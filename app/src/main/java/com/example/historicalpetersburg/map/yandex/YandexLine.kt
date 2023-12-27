@@ -6,15 +6,20 @@ import com.example.historicalpetersburg.map.main.shape.style.RouteStyle
 import com.yandex.mapkit.map.PolylineMapObject
 
 class YandexLine(
-    private val polylineObject : PolylineMapObject,
     override val coordinates: List<Coordinate>,
     style: RouteStyle = RouteStyle.Default
 ) : ILine {
+    var polylineObject: PolylineMapObject? = null
+        set(value) {
+            field = value
+            field?.addTapListener(listener)
+            style = style
+        }
 
     override var visibility: Boolean = true
         set(value) {
             field = value
-            polylineObject.isVisible = field
+            polylineObject?.isVisible = field
         }
 
     private val listener = YandexObjectTapListener()
@@ -22,7 +27,7 @@ class YandexLine(
     override var style: RouteStyle = style
         set(value) {
             field = value
-            polylineObject.apply {
+            polylineObject?.apply {
                 strokeWidth = value.strokeWidth
                 setStrokeColor(value.strokeColor)
                 outlineWidth = value.outlineWidth
@@ -31,7 +36,6 @@ class YandexLine(
         }
 
     init {
-        polylineObject.addTapListener(listener)
         this.style = style
     }
 

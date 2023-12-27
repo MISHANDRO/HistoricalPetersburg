@@ -4,15 +4,15 @@ import com.example.historicalpetersburg.map.main.objects.PartRoute
 import com.example.historicalpetersburg.map.main.objects.RouteData
 
 class PathState(
-    override val partRoute: PartRoute
+    override val partRoute: PartRoute,
+    val routeId: Int
 ) : IRouteInspectorState {
     override fun moveToStart(route: RouteData): IRouteInspectorState {
         return moveToInactive()
     }
 
     override fun moveToNextPart(): IRouteInspectorState {
-        // TODO("проверка пришли ли?")
-        return PartState(partRoute)
+        return PartState(partRoute, routeId)
     }
 
     override fun moveToInactive(): IRouteInspectorState {

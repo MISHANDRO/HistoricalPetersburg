@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
+import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -27,6 +28,8 @@ class ListBottomSheetBehaviorCallback(
             BottomSheetBehavior.STATE_COLLAPSED -> {
                 // Нижнее окно свернуто
                 prevIsHalfState = 0
+                MapManager.instance.map.zoomPadding.bottom =
+                    (GlobalTools.instance.displayMetrics.heightPixels - bottomSheet.top + params.height + params.bottomMargin).toFloat()
             }
             BottomSheetBehavior.STATE_EXPANDED -> {
                 // Нижнее окно развернуто
@@ -47,21 +50,14 @@ class ListBottomSheetBehaviorCallback(
             }
             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
                 prevIsHalfState = if (prevIsHalfState == -1) 0 else 1
+                MapManager.instance.map.zoomPadding.bottom =
+                    (GlobalTools.instance.displayMetrics.heightPixels - bottomSheet.top + params.height + params.bottomMargin).toFloat()
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-//        pinContent.translationY = -(bottomSheet.height-margin-pinContent.height)*slideOffset
-
         pinContent.translationY = -slideOffset * (bottomSheet.height - behavior.peekHeight - behavior.expandedOffset)
         window.statusBarColor = Color.argb(((0.65 * slideOffset + 0.35) * 255).toInt(), 30, 30, 30)
-//        pinContent.translationY = -slideOffset * pinContent.height
-//
-//        println(params.bottomMargin)
-//        params.bottomMargin = bottomSheet.top - bottomSheet.height + margin
-//        pinContent.requestLayout()
-        // println(bottomSheet.height - bottomSheet.top)
     }
 }

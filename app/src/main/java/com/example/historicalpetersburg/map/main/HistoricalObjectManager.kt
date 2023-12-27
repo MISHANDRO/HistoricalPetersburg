@@ -15,6 +15,7 @@ class HistoricalObjectManager {
     lateinit var placeRepository : IPlaceRepository
 
     var filterChain: IHistoricalObjectFilterChain? = null
+    var selectedHistoricalObject: IHistoricalObjectData? = null
 
     lateinit var listOfAll: List<IHistoricalObjectData>
         private set

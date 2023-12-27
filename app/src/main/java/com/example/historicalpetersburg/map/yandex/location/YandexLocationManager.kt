@@ -56,7 +56,7 @@ class YandexLocationManager(override val proxy: AvailableUseLocationProxy?) : IL
         locationManager.unsubscribe(locationListener)
     }
 
-    override fun zoomInPosition() {
-        locationListener.zoomInPosition()
+    override fun zoomInPosition(): Boolean {
+        return locationListener.zoomInPosition()
     }
 }

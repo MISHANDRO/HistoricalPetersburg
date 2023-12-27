@@ -1,41 +1,31 @@
 package com.example.historicalpetersburg.map.main.views.bottomsheet
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.activities.FullscreenImageViewerActivity
 import com.example.historicalpetersburg.databinding.BottomSheetHistoricalObjectBinding
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.main.objects.RouteData
-import com.example.historicalpetersburg.map.main.routeinspector.BottomSheetRouteViewVisitor
+import com.example.historicalpetersburg.map.main.objects.PlaceData
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.image.ImageAdapter
 import com.example.historicalpetersburg.tools.image.ImageArray
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class RouteBottomSheet(val routeData: RouteData) : CustomDialog() {
+class PlaceBottomSheet(val placeData: PlaceData) : CustomDialog() {
     lateinit var binding: BottomSheetHistoricalObjectBinding
-
-    var visitor: BottomSheetRouteViewVisitor? = null
 
     override var peekHeight = 520
     override var maxHeight = 1900
     override var halfExpandedRatio = 0.5f
-
-//    constructor() : this(MapManager.instance.objectManager.listOfAll[0] as RouteData)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,8 +44,7 @@ class RouteBottomSheet(val routeData: RouteData) : CustomDialog() {
         }
 
         binding.mainButton.setOnClickListener {
-            visitor = BottomSheetRouteViewVisitor(this)
-            visitor!!.start()
+            // TODO проверить и открыть инфу
         }
 
         binding.bottomSheetRouteImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -76,11 +65,6 @@ class RouteBottomSheet(val routeData: RouteData) : CustomDialog() {
         binding.bottomSheetCard.scaleX = 0.5f
         binding.bottomSheetCard.scaleY = 0.5f
         binding.numberOfPhoto.alpha = 0f
-
-//        behavior.peekHeight =
-        view.setOnTouchListener { _, _ ->
-            true
-        }
     }
 
      override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -105,39 +89,35 @@ class RouteBottomSheet(val routeData: RouteData) : CustomDialog() {
     }
 
     private fun build() {
-        val images = ImageArray()
+        var isCompleted = MapManager.instance.userManager.repository.isPlaceCompleted(placeData)
 
-        val completePartIds = MapManager.instance.userManager.repository.getCompletePartsByRoute(routeData)
-        var text = SpannableStringBuilder()
-        text.append(routeData.shortDesc.value)
-        text.appendLine()
-        text.appendLine()
-        text.appendLine()
+        binding.name.text = placeData.name.value
+        binding.notMainName.text = placeData.name.value
 
-        for (partRouteId in completePartIds) {
-            val partRoute = MapManager.instance.objectManager.routeRepository.getPartById(partRouteId)!!
-            partRoute.images?.let { images += it }
+        binding.mainText.text = placeData.shortDesc.value
 
-            val name = SpannableString(partRoute.name.value).apply {
-                setSpan(Typeface.BOLD, 0, this.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                setSpan(RelativeSizeSpan(1.4f), 0, this.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        setImages(placeData.images)
+
+        if (isCompleted) {
+            binding.mainButton.isEnabled = false
+            binding.mainButton.text = resources.getString(R.string.place_already_complete_btn)
+
+            binding.mainText.maxLines = Int.MAX_VALUE
+            binding.mainText.foreground = null
+        } else {
+            binding.mainButton.apply {
+                text = resources.getString(R.string.place_btn)
+                setOnClickListener {
+                    userInPlace()
+                }
             }
-            text.append(name)
-            text.append(": ")
-            text.appendLine()
-            text.append(partRoute.text.value)
-            text.appendLine()
-            text.appendLine()
+            binding.mainText.maxLines = 5
+            binding.mainText.foreground = ContextCompat.getDrawable(requireContext(), R.drawable.foreground_gradient)
         }
-        setImages(images)
-
-        binding.name.text = routeData.name.value
-        binding.notMainName.text = routeData.name.value
-        binding.mainText.text = text
     }
 
-    private fun setImages(imageArray: ImageArray) {
-        if (imageArray.size == 0) {
+    private fun setImages(imageArray: ImageArray?) {
+        if (imageArray == null || imageArray.size == 0) {
             binding.imageLayer.visibility = View.GONE
             return
         }
@@ -158,5 +138,10 @@ class RouteBottomSheet(val routeData: RouteData) : CustomDialog() {
         }
 
         binding.bottomSheetRouteImage.adapter = adapter
+    }
+
+    fun userInPlace() {
+        MapManager.instance.userManager.repository.saveCompletePlace(placeData)
+        build()
     }
 }

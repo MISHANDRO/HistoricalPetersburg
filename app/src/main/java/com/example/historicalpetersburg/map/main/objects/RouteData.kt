@@ -4,6 +4,7 @@ import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.shape.ILine
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
+import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
 import com.example.historicalpetersburg.map.main.views.bottomsheet.RouteBottomSheet
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.value.Value
@@ -52,7 +53,14 @@ class RouteData(
 
     override var icon: Int = -1
 
+    var partRouteStyle: PlacemarkStyle? = null
+
     override fun select() {
+        if (MapManager.instance.objectManager.selectedHistoricalObject?.id == id) {
+            return
+        }
+        MapManager.instance.objectManager.selectedHistoricalObject = this
+
         MapManager.instance.locationManager.follow = false
 
         coordinates?.let {

@@ -3,6 +3,9 @@ package com.example.historicalpetersburg.map.main.objects
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
+import com.example.historicalpetersburg.map.main.views.bottomsheet.PlaceBottomSheet
+import com.example.historicalpetersburg.tools.GlobalTools
+import com.example.historicalpetersburg.tools.image.ImageArray
 import com.example.historicalpetersburg.tools.value.Value
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -39,7 +42,14 @@ class PlaceData(
 
     override var icon: Int = -1
 
+    var images: ImageArray? = null
+
     override fun select() { // TODO Visitor
+        if (MapManager.instance.objectManager.selectedHistoricalObject?.id == id) {
+            return
+        }
+        MapManager.instance.objectManager.selectedHistoricalObject = this
+
         coordinates?.let {
             MapManager.instance.map.zoom(it)
         }
@@ -50,6 +60,6 @@ class PlaceData(
 
         MapManager.instance.locationManager.follow = false
 
-//        RouteInfoContentBottomSheet(this).show()
+        PlaceBottomSheet(this).show(GlobalTools.instance.fragmentManager)
     }
 }

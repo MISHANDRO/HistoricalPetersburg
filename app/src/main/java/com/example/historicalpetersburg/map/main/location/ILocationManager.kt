@@ -16,5 +16,5 @@ interface ILocationManager {
     fun startUpdate()
     fun stopUpdate()
 
-    fun zoomInPosition()
+    fun zoomInPosition(): Boolean
 }

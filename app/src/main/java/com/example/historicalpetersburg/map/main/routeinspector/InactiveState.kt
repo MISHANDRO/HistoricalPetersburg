@@ -9,10 +9,7 @@ class InactiveState : IRouteInspectorState {
 
     override fun moveToStart(route: RouteData): IRouteInspectorState {
         val firstPart = MapManager.instance.objectManager.routeRepository.getFirstPartByRoute(route)!!
-        // TODO проверяем, где мы, задаем отслеживание
-
-
-        return PartState(firstPart)
+        return PartState(firstPart, route.routeId)
     }
 
     override fun moveToNextPart(): IRouteInspectorState {

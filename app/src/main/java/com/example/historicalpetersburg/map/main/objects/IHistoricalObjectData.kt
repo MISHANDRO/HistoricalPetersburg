@@ -1,5 +1,6 @@
 package com.example.historicalpetersburg.map.main.objects
 
+import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.tools.value.Value
 

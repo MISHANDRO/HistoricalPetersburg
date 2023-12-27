@@ -1,6 +1,7 @@
 package com.example.historicalpetersburg.map.main.objects
 
 import com.example.historicalpetersburg.map.main.models.Coordinate
+import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
 import com.example.historicalpetersburg.tools.image.ImageArray
 import com.example.historicalpetersburg.tools.value.Value
 
@@ -13,4 +14,5 @@ class PartRoute(
     var nextId: Int? = null
     var preview: Value<String>? = null
     var images: ImageArray? = null
+    var placeId: Int? = null
 }

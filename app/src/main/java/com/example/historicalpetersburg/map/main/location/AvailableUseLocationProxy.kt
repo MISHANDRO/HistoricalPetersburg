@@ -9,10 +9,8 @@ import android.location.LocationManager
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Button
-import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.google.android.gms.common.api.ApiException
@@ -120,7 +118,9 @@ class AvailableUseLocationProxy {
             if (resultCode == Activity.RESULT_OK) {
                 locationRequestResultCallback?.let { withAvailableUseLocation(it) }
             } else {
-                GlobalTools.instance.toast("Твои проблемы TODO")
+                GlobalTools.instance.let {
+                    it.toast(it.getString(R.string.location_not_available))
+                }
             }
         }
 
@@ -129,7 +129,7 @@ class AvailableUseLocationProxy {
 
     private fun alertDialogToRequestPermission() {
 
-        val bottomSheetDialog = BottomSheetDialog(GlobalTools.instance.activity, R.style.MainBottomSheetDialog)
+        val bottomSheetDialog = BottomSheetDialog(GlobalTools.instance.activity, R.style.Transparent)
         bottomSheetDialog.setContentView(R.layout.info_access_location)
 
         bottomSheetDialog.findViewById<Button>(R.id.go_to_settings)?.setOnClickListener {

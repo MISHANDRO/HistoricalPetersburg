@@ -5,16 +5,21 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.io.FileOutputStream
 
-class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-    companion object {
-        private const val DATABASE_NAME = "app.db"
-        private const val DATABASE_VERSION = 1
-    }
+class DbHelper(
+    val context: Context,
+    private val DATABASE_NAME: String,
+    private val DATABASE_VERSION: Int = 1,
+    val isNewAnyone: Boolean = true
+) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+//    companion object {
+//        private const val DATABASE_NAME = "app.db"
+//        private const val DATABASE_VERSION = 1
+//    }
 
     init {
-        if (!databaseExists()) {
+        if (!databaseExists() || isNewAnyone) {
+            copyDatabase()
         }
-        copyDatabase()
     }
 
     override fun onCreate(db: SQLiteDatabase?) {}

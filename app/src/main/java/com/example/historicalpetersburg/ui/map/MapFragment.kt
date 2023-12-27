@@ -8,12 +8,15 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.databinding.FragmentMapBinding
 import com.example.historicalpetersburg.map.MapManager
+import com.example.historicalpetersburg.map.main.filters.CompleteFilterChain
 import com.example.historicalpetersburg.map.main.filters.GroupFilterChain
 import com.example.historicalpetersburg.map.main.filters.TypeFilterChain
 import com.example.historicalpetersburg.map.main.views.adapters.HistoricalObjectListAdapter
@@ -229,8 +232,11 @@ class MapFragment : Fragment() {
         val groupFilter1 = GroupFilterChain()
         val groupFilter2 = GroupFilterChain()
 
+        val completedFilter = CompleteFilterChain(false)
+
         typeFilterChain.addNext(groupFilter1)
         typeFilterChain.addNext(groupFilter2)
+        typeFilterChain.addNext(completedFilter)
 
         MapManager.instance.objectManager.filterChain = typeFilterChain
         val unions = MapManager.instance.objectManager.groupRepository.getUnions(2)
@@ -305,10 +311,18 @@ class MapFragment : Fragment() {
         }
 
         MapManager.instance.locationManager.actionsToFollowChange.add {
-            if (it) {
-                binding.zoomLocationButton.setImageResource(R.drawable.ic_arrow)
+            binding.zoomLocationButton.background = if (it) {
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_on_secondary_round_all_30_inset_10)
             } else {
-                binding.zoomLocationButton.setImageResource(R.drawable.button_nav)
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_on_primary_round_all_30_inset_10)
+            }
+        }
+
+        binding.notCompletedCheck.setOnCheckedChangeListener { _, isChecked ->
+            completedFilter.active = isChecked
+            MapManager.instance.objectManager.let {
+                it.updateShown()
+                it.zoomShown()
             }
         }
 
@@ -321,8 +335,9 @@ class MapFragment : Fragment() {
         super.onStart()
 
         MapManager.instance.locationManager.startUpdate()
-        MapManager.instance.objectManager.zoomShown()
-//        MapManager.instance.locationManager.zoomInPosition()
+        if (!MapManager.instance.locationManager.zoomInPosition()) {
+            MapManager.instance.objectManager.zoomShown()
+        }
     }
 
     override fun onStop() {

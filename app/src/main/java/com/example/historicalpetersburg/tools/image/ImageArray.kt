@@ -5,13 +5,14 @@ import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.value.ImageVal
 
 
-class ImageArray(imageVals: Array<String>) {
-    private val data = arrayOfNulls<ImageVal>(imageVals.size)
+class ImageArray(var imageVals: Array<String>) {
+    private var data = arrayOfNulls<ImageVal>(imageVals.size)
 
     val size: Int
         get() = data.size
 
     constructor(resourceId: Int) : this(GlobalTools.instance.getStringArray(resourceId)) { }
+    constructor() : this(emptyArray()) { }
 
     init {
         var i = -1
@@ -33,5 +34,10 @@ class ImageArray(imageVals: Array<String>) {
 
     operator fun get(index: Int): ImageVal? {
         return data[index]
+    }
+
+    operator fun plusAssign(other: ImageArray) {
+        this.data += other.data
+        this.imageVals += other.imageVals
     }
 }

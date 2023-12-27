@@ -19,7 +19,7 @@
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:textColorSecondary">?colorSecondaryVariant</item>
 
-        <item name="bottomSheetDialogTheme">@style/MainBottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/Transparent</item>
     </style>
 
     <style name="SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -43,7 +43,7 @@
 
     <!-- Start check custom -->
     <style name="DarkCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="colorAccent">#8A0000</item>
+        <item name="colorAccent">?colorOnPrimary</item>
         <item name="android:textColorSecondary">@color/white</item>
     </style>
     <!-- End check custom -->
@@ -71,10 +71,17 @@
     </style>
     <!-- End settings custom -->
 
-    <style name="MainBottomSheetDialog" parent="Theme.HistoricalPetersburg">
+    <style name="Transparent" parent="Theme.HistoricalPetersburg">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
+
+    <style name="TransparentDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
 
 </resources>

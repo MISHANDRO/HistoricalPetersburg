@@ -3,10 +3,12 @@ package com.example.historicalpetersburg.map
 import com.example.historicalpetersburg.map.main.HistoricalObjectManager
 import com.example.historicalpetersburg.map.main.location.ILocationManager
 import com.example.historicalpetersburg.map.main.IMapService
+import com.example.historicalpetersburg.map.main.UserManager
 import com.example.historicalpetersburg.map.main.location.AvailableUseLocationProxy
 import com.example.historicalpetersburg.map.main.repositories.SqliteGroupRepository
 import com.example.historicalpetersburg.map.main.repositories.SqlitePlaceRepository
 import com.example.historicalpetersburg.map.main.repositories.SqliteRouteRepository
+import com.example.historicalpetersburg.map.main.repositories.SqliteUserRepository
 import com.example.historicalpetersburg.map.main.routeinspector.RouteInspector
 import com.example.historicalpetersburg.map.yandex.location.YandexLocationManager
 import com.example.historicalpetersburg.map.yandex.YandexMapService
@@ -22,6 +24,7 @@ class MapManager private constructor() {
     private var _objectManager: HistoricalObjectManager? = null
     private var _locationManager: ILocationManager? = null
     private var _routeInspector: RouteInspector? = null
+    private var _userManager: UserManager? = null
 
     val mapFragment: MapFragment
         get() = _mapFragment!!
@@ -37,6 +40,9 @@ class MapManager private constructor() {
 
     val routeInspector: RouteInspector
         get() = _routeInspector!!
+
+    val userManager: UserManager
+        get() = _userManager!!
 
     companion object {
         private val instanceObj: MapManager by lazy { MapManager() }
@@ -64,13 +70,17 @@ class MapManager private constructor() {
 
             instance._routeInspector = RouteInspector()
 
+
+            instance._userManager = UserManager(
+                SqliteUserRepository(DbHelper(GlobalTools.instance.activity, "user.db", 1, false)))
+
             MapKitFactory.getInstance().onStart()
             mapView.onStart()
         }
     }
 
     fun createDefaultRoutes() {
-        val dbHelper = DbHelper(GlobalTools.instance.activity)
+        val dbHelper = DbHelper(GlobalTools.instance.activity, "app.db")
 
         val groupRepository = SqliteGroupRepository(dbHelper)
         objectManager.groupRepository = groupRepository

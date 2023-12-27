@@ -29,7 +29,6 @@ class FullscreenImageViewerActivity : AppCompatActivity() {
     private lateinit var binding: FullscreenImageViewerBinding
     private var isFullscreen: Boolean = false
     private lateinit var images: ImageArray
-    private lateinit var separatorOf: String
 
     private lateinit var windowInsetsController: WindowInsetsControllerCompat
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -54,8 +53,6 @@ class FullscreenImageViewerActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = ""
 
-        separatorOf = binding.numberOfPhoto.text.toString()
-
         images = intent.getStringArrayExtra("current_array")?.let { ImageArray(it) }!!
         binding.fullscreenImageViewer.adapter = images.let { ImageAdapter(it).apply {
             scaleTypeOnItem = ImageView.ScaleType.FIT_CENTER
@@ -71,7 +68,8 @@ class FullscreenImageViewerActivity : AppCompatActivity() {
 
         binding.fullscreenImageViewer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                val text = "${position + 1} $separatorOf ${images.size}"
+                val text = getString(
+                    R.string.image_viewer_of, position + 1, images.size)
                 binding.numberOfPhoto.text = text
             }
         })

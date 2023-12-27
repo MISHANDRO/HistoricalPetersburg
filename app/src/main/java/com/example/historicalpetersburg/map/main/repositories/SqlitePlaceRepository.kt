@@ -7,6 +7,7 @@ import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.objects.PlaceData
 import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
 import com.example.historicalpetersburg.tools.GlobalTools
+import com.example.historicalpetersburg.tools.image.ImageArray
 import com.example.historicalpetersburg.tools.value.StringId
 
 class SqlitePlaceRepository(private val sqlite: SQLiteOpenHelper) : IPlaceRepository {
@@ -21,7 +22,8 @@ class SqlitePlaceRepository(private val sqlite: SQLiteOpenHelper) : IPlaceReposi
                 Latitude,
                 Longitude,
                 StyleName,
-                IconName
+                IconName,
+                ImagesId
             FROM Places
         """.trimIndent()
 
@@ -37,8 +39,11 @@ class SqlitePlaceRepository(private val sqlite: SQLiteOpenHelper) : IPlaceReposi
                     name = StringId(cursor.getString(2)),
                     shortDesc = StringId(cursor.getString(3))
                 ).apply {
-                    icon = if (cursor.isNull(7)) R.drawable.icon_achievement // TODO
+                    icon = if (cursor.isNull(7)) R.drawable.icon_place
                         else GlobalTools.instance.getIdentifier(cursor.getString(7), "drawable")
+
+                    images = if (cursor.isNull(8)) null
+                        else ImageArray(GlobalTools.instance.getIdentifier(cursor.getString(8), "array"))
                 }
 
                 if (!cursor.isNull(4)) { // TODO

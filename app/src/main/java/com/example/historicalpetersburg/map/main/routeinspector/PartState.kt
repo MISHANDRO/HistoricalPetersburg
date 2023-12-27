@@ -5,7 +5,8 @@ import com.example.historicalpetersburg.map.main.objects.PartRoute
 import com.example.historicalpetersburg.map.main.objects.RouteData
 
 class PartState(
-    override val partRoute: PartRoute
+    override val partRoute: PartRoute,
+    val routeId: Int
 ) : IRouteInspectorState {
 
     override fun moveToStart(route: RouteData): IRouteInspectorState {
@@ -13,7 +14,8 @@ class PartState(
     }
 
     override fun moveToNextPart(): IRouteInspectorState {
-//        TODO("сохраняем")
+        MapManager.instance.userManager.repository.saveCompletePart(partRoute, routeId)
+
         val nextPartId = partRoute.nextId
         if (nextPartId == null) {
             return InactiveState()
@@ -21,14 +23,14 @@ class PartState(
 
         val nextPart = MapManager.instance.objectManager.routeRepository.getPartById(nextPartId)!!
         if (nextPart.preview == null) {
-            return PartState(nextPart)
+            return PartState(nextPart, routeId)
         }
 
-        return PathState(nextPart)
+        return PathState(nextPart, routeId)
     }
 
     override fun moveToInactive(): IRouteInspectorState {
-        // TODO сохраняем
+        MapManager.instance.userManager.repository.saveCompletePart(partRoute, routeId)
         return InactiveState()
     }
 

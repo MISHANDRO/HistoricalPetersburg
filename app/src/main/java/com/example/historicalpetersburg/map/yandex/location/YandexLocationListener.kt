@@ -4,6 +4,8 @@ import android.animation.ValueAnimator
 import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.location.LocationUpdateListener
+import com.example.historicalpetersburg.map.main.models.AnimationZoomType
+import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
 import com.example.historicalpetersburg.map.yandex.YandexPlacemark
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.Location
@@ -40,7 +42,9 @@ class YandexLocationListener(
     override fun onLocationUpdated(location: Location) {
         if (curPosition == null) {
             curPositionMapObject = (Coordinate.fromYandexPoint(location.position)?.let {
-                MapManager.instance.map.addPlacemark(it)
+                MapManager.instance.map.addPlacemark(it).apply {
+                    style = PlacemarkStyle.Start1 // TODO
+                }
             } as YandexPlacemark).placemarkObject
             curPosition = location.position
         }
@@ -67,14 +71,16 @@ class YandexLocationListener(
         listeners.forEach { it.onLocationStatusUpdated(locationStatus != LocationStatus.NOT_AVAILABLE) }
     }
 
-    fun zoomInPosition() {
-        if (curPosition == null) return
+    fun zoomInPosition(): Boolean {
+        if (curPosition == null) return false
 
         MapManager.instance.map.let {
             var zoomValue = it.camera.zoom
             if (zoomValue < 8) zoomValue = 16.5f
 
-            it.zoom(Coordinate.fromYandexPoint(curPosition)!!, zoomValue)
+            it.zoom(Coordinate.fromYandexPoint(curPosition)!!, zoomValue, 0.1f, AnimationZoomType.LINEAR)
         }
+
+        return true
     }
 }

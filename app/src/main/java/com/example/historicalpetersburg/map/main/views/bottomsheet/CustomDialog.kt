@@ -56,6 +56,7 @@ abstract class CustomDialog : Fragment() {
     }
 
     fun close() {
+        behavior.isHideable = true
         behavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 

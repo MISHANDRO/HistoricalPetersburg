@@ -2,11 +2,13 @@ package com.example.historicalpetersburg.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.historicalpetersburg.App
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.activities.LanguageActivity
+import com.example.historicalpetersburg.map.MapManager
 import com.example.historicalpetersburg.tools.settings.Settings
 
 
@@ -22,6 +24,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<Preference>(Settings.instance.localeHelper.key)?.setOnPreferenceClickListener {
             val intent = Intent(activity, LanguageActivity::class.java)
             startActivity(intent)
+            true
+        }
+
+        findPreference<Preference>("user_reset")?.setOnPreferenceClickListener {
+            MapManager.instance.userManager.repository.resetAll()
+            Toast.makeText(requireContext(), resources.getString(R.string.user_reset_success), Toast.LENGTH_SHORT).show()
             true
         }
 

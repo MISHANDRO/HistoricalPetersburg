@@ -6,7 +6,7 @@
     android:insetTop="10dp"
     android:insetBottom="10dp">
     <shape>
-        <solid android:color="?colorPrimary"/>
+        <solid android:color="?colorOnSecondary"/>
 
         <corners
             android:topLeftRadius="30dp"

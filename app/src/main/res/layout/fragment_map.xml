@@ -21,24 +21,27 @@
         android:layout_marginEnd="10dp"
         android:layout_gravity="end">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/zoom_in_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/button_add" />
+            android:foreground="@drawable/button_add"
+            android:background="@drawable/background_on_primary_round_all_30_inset_10" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/zoom_out_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/button_indeterminate" />
+            android:foreground="@drawable/button_indeterminate"
+            android:background="@drawable/background_on_primary_round_all_30_inset_10" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/zoom_location_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="30dp"
-            android:src="@drawable/button_nav" />
+            android:foreground="@drawable/button_nav"
+            android:background="@drawable/background_on_primary_round_all_30_inset_10" />
 
     </LinearLayout>
 
@@ -93,6 +96,7 @@
                 </com.google.android.material.tabs.TabLayout>
 
                 <CheckBox
+                    android:id="@+id/not_completed_check"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
@@ -102,7 +106,7 @@
                     android:paddingEnd="10dp"
                     android:textSize="16sp"
                     android:textColor="?colorOnPrimary"
-                    android:text="@string/places"/>
+                    android:text="@string/not_competed_objects"/>
 
             </LinearLayout>
 

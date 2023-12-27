@@ -8,9 +8,11 @@ import com.example.historicalpetersburg.map.main.objects.PartRoute
 import com.example.historicalpetersburg.map.main.objects.RouteData
 import com.example.historicalpetersburg.map.main.shape.style.PlacemarkStyle
 import com.example.historicalpetersburg.map.main.shape.style.RouteStyle
+import com.example.historicalpetersburg.map.yandex.YandexLine
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.image.ImageArray
 import com.example.historicalpetersburg.tools.value.StringId
+import com.yandex.mapkit.map.PolylineMapObject
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -29,7 +31,9 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
                 COUNT(*) OVER(PARTITION BY Routes.RouteId),
                 Routes.StyleName,
                 Routes.StartPositionStyleName,
-                IconName
+                IconName,
+                PlaceId,
+                PartRouteStyleName
             FROM Routes
             LEFT JOIN PartsRoute
             ON PartsRoute.RouteId = Routes.RouteId
@@ -58,10 +62,23 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
                     ).apply {
                         icon = if (cursor.isNull(10)) R.drawable.icon_route
                             else GlobalTools.instance.getIdentifier(cursor.getString(10), "drawable")
+                        partRouteStyle = if (cursor.isNull(11)) PlacemarkStyle.Default
+                            else PlacemarkStyle.valueOf(cursor.getString(11))
 
 
                         if (!cursor.isNull(4)) {
-                            line = MapManager.instance.map.addLine(curCoordinates.toList())
+                            line = MapManager.instance.map.addLine(curCoordinates.toList()) {
+                                (line as YandexLine).polylineObject?.let {
+                                    val angle = angleFromCoordinate(
+                                        it.geometry.points[0].latitude,
+                                        it.geometry.points[0].longitude,
+                                        it.geometry.points[1].latitude,
+                                        it.geometry.points[1].longitude,
+                                    )
+                                    startPlacemark?.direction = angle.toFloat()
+                                }
+                            }
+
                             line?.style = try {
                                 RouteStyle.valueOf(cursor.getString(7))
                             } catch (_: Exception) {
@@ -75,14 +92,6 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
                             } catch (_: Exception) {
                                 PlacemarkStyle.Default
                             }
-                            println(startPlacemark?.style?.name)
-
-
-                            val angle = angleFromCoordinate(
-                                curCoordinates[0].latitude, curCoordinates[0].longitude,
-                                curCoordinates[1].latitude, curCoordinates[1].longitude,
-                            )
-                            startPlacemark?.direction = angle.toFloat()
                         }
                     }
 
@@ -99,14 +108,6 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
 
     override fun getFirstPartByRoute(route: RouteData): PartRoute? {
         val db = sqlite.readableDatabase
-        println(route.routeId)
-        println(route.routeId)
-        println(route.routeId)
-        println(route.routeId)
-        println(route.routeId)
-        println(route.routeId)
-        println(route.routeId)
-        println(route.routeId)
         val query = """
             SELECT
                 PartRouteId
@@ -128,6 +129,29 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
         return null
     }
 
+    override fun getAllPartIdsByRoute(route: RouteData): Array<Int> {
+        val db = sqlite.readableDatabase
+        val query = """
+            SELECT
+                PartRouteId
+            FROM PartsRoute
+            WHERE RouteId = ${route.routeId}
+            ORDER BY PartRouteId
+        """.trimIndent()
+
+        val res = mutableListOf<Int>()
+
+        val cursor = db.rawQuery(query, null)
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                res.add(cursor.getInt(0))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+
+        return res.toTypedArray()
+    }
+
     override fun getPartById(partRouteId: Int): PartRoute? {
         val db = sqlite.readableDatabase
 
@@ -142,6 +166,7 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
                     PreviewId,
                     TextId,
                     ImageIds,
+                    PlaceId,
                     LEAD(PartRouteId) OVER(PARTITION BY RouteId) AS NextId
                 FROM PartsRoute
             )
@@ -162,7 +187,9 @@ class SqliteRouteRepository(private val sqlite: SQLiteOpenHelper) : IRouteReposi
                 preview = if (cursor.isNull(4)) null else StringId(cursor.getString(4))
                 images = if (cursor.isNull(6)) null
                          else ImageArray(GlobalTools.instance.getIdentifier(cursor.getString(6), "array"))
-                nextId = if (cursor.isNull(7)) null else cursor.getInt(7)
+                placeId = if (cursor.isNull(7)) null else cursor.getInt(7)
+
+                nextId = if (cursor.isNull(8)) null else cursor.getInt(8)
             }
         }
         cursor.close()

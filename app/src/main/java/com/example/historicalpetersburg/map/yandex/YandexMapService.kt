@@ -1,23 +1,42 @@
 package com.example.historicalpetersburg.map.yandex
 
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.map.main.models.Camera
 import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.IMapService
+import com.example.historicalpetersburg.map.main.models.AnimationZoomType
 import com.example.historicalpetersburg.map.main.models.Padding
 import com.example.historicalpetersburg.map.main.shape.ILine
+import com.example.historicalpetersburg.map.main.shape.IMapObject
 import com.example.historicalpetersburg.map.main.shape.IPlacemark
 import com.yandex.mapkit.Animation
+import com.yandex.mapkit.RequestPoint
+import com.yandex.mapkit.RequestPointType
 import com.yandex.mapkit.ScreenPoint
 import com.yandex.mapkit.ScreenRect
+import com.yandex.mapkit.directions.driving.DrivingOptions
+import com.yandex.mapkit.directions.driving.VehicleOptions
 import com.yandex.mapkit.geometry.Circle
 import com.yandex.mapkit.geometry.Geometry
+import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polyline
 import com.yandex.mapkit.geometry.PolylineBuilder
 import com.yandex.mapkit.map.CameraListener
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.CameraUpdateReason
+import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.MapObject
+import com.yandex.mapkit.map.MapObjectCollection
+import com.yandex.mapkit.map.PolylineMapObject
 import com.yandex.mapkit.mapview.MapView
+import com.yandex.mapkit.transport.TransportFactory
+import com.yandex.mapkit.transport.masstransit.Route
+import com.yandex.mapkit.transport.masstransit.Session
+import com.yandex.mapkit.transport.masstransit.TimeOptions
+import com.yandex.runtime.Error
+import com.yandex.runtime.image.ImageProvider
 
 import kotlin.math.*
 
@@ -51,7 +70,7 @@ class YandexMapService(private val mapView: MapView) : IMapService {
         mapView.map.move(position, Animation(Animation.Type.LINEAR, duration), null)
     }
 
-    override fun zoom(coordinate: Coordinate, zoomValue: Float, duration: Float) {
+    override fun zoom(coordinate: Coordinate, zoomValue: Float, duration: Float, type: AnimationZoomType) {
 
         val position = CameraPosition(
             coordinate.toYandexPoint(),
@@ -60,10 +79,12 @@ class YandexMapService(private val mapView: MapView) : IMapService {
             camera.tilt
         )
 
-        mapView.map.move(position, Animation(Animation.Type.SMOOTH, duration), null)
+        mapView.map.move(position, Animation(
+            if (type == AnimationZoomType.SMOOTH) Animation.Type.SMOOTH else Animation.Type.LINEAR,
+            duration), null)
     }
 
-    override fun zoom(coordinates: List<Coordinate>, duration: Float) {
+    override fun zoom(coordinates: List<Coordinate>, duration: Float, type: AnimationZoomType) {
         if (coordinates.isEmpty()) {
             return
         }
@@ -87,19 +108,39 @@ class YandexMapService(private val mapView: MapView) : IMapService {
             Geometry.fromPolyline(Polyline(points)),
         )
 
-        mapView.map.move(position, Animation(Animation.Type.SMOOTH, duration), null)
+        mapView.map.move(position, Animation(
+            if (type == AnimationZoomType.SMOOTH) Animation.Type.SMOOTH else Animation.Type.LINEAR,
+            duration), null)
     }
 
-    override fun addLine(coordinates: List<Coordinate>): ILine {
-        val builder = PolylineBuilder()
+    override fun addLine(coordinates: List<Coordinate>, action: (() -> Unit)?): ILine {
+        val points = mutableListOf<RequestPoint>()
         for (coordinate in coordinates) {
-            builder.append(coordinate.toYandexPoint())
+            points += RequestPoint(coordinate.toYandexPoint(), RequestPointType.WAYPOINT, null, null)
         }
+        val res = YandexLine(coordinates)
 
-        val polyline = builder.build()
-        val polylineObject = mapView.map.mapObjects.addPolyline(polyline)
+        val routeListener = object : Session.RouteListener {
 
-        return YandexLine(polylineObject, coordinates)
+            override fun onMasstransitRoutes(p0: MutableList<Route>) {
+                res.polylineObject = mapView.map.mapObjects.addPolyline(p0[0].geometry)
+                action?.invoke()
+            }
+
+            override fun onMasstransitRoutesError(p0: Error) { }
+        }
+        val pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter()
+        pedestrianRouter.requestRoutes(points, TimeOptions(), routeListener)
+
+//        val builder = PolylineBuilder()
+//        for (coordinate in coordinates) {
+//            builder.append(coordinate.toYandexPoint())
+//        }
+//
+//        val polyline = builder.build()
+//        val polylineObject = mapView.map.mapObjects.addPolyline(polyline)
+
+        return res
     }
 
     override fun addCircle(coordinate: Coordinate, radius: Float): Any {
@@ -115,8 +156,8 @@ class YandexMapService(private val mapView: MapView) : IMapService {
         return YandexPlacemark(placemarkObject, coordinate)
     }
 
-    override fun deleteObject(mapObject: Any) {
-        mapView.map.mapObjects.remove(mapObject as MapObject)
+    override fun deletePlaceMark(placemark: IPlacemark) {
+        mapView.map.mapObjects.remove((placemark as YandexPlacemark).placemarkObject)
     }
 
     override fun addCameraPositionChangedListener(action: () -> Unit) {
@@ -125,19 +166,5 @@ class YandexMapService(private val mapView: MapView) : IMapService {
                 action.invoke()
         })
         mapView.map.addCameraListener(actionsCameraListener.last())
-    }
-
-    override fun getDistance(coordinate1: Coordinate, coordinate2: Coordinate): Long {
-        val earthRadius = 6371e3
-
-        val lat1Rad = Math.toRadians(coordinate1.latitude)
-        val lat2Rad = Math.toRadians(coordinate2.latitude)
-        val deltaLat = Math.toRadians(coordinate2.latitude - coordinate1.latitude)
-        val deltaLon = Math.toRadians(coordinate2.longitude - coordinate1.longitude)
-
-        val a = sin(deltaLat / 2).pow(2) + cos(lat1Rad) * cos(lat2Rad) * sin(deltaLon / 2).pow(2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return (earthRadius * c).toLong()
     }
 }
