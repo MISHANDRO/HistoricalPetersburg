@@ -1,47 +1,53 @@
 package com.example.historicalpetersburg.ui.map
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.historicalpetersburg.GlobalTools
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.databinding.FragmentMapBinding
 import com.example.historicalpetersburg.map.MapManager
-import com.example.historicalpetersburg.map.views.bottomsheet.GroupsRoutesListBottomSheet
-import com.example.historicalpetersburg.map.views.bottomsheet.ExtraBottomSheet
-import com.example.historicalpetersburg.map.views.adapters.GroupListAdapter
-import com.example.historicalpetersburg.map.views.adapters.HistoricalObjectListAdapter
-import com.example.historicalpetersburg.map.views.behaviors.ListBottomSheetBehaviorCallback
-import com.example.historicalpetersburg.map.views.listeners.GroupListSpinnerSelectedListener
-import com.example.historicalpetersburg.map.views.listeners.TypeSelectionListener
+import com.example.historicalpetersburg.map.main.filters.CompleteFilterChain
+import com.example.historicalpetersburg.map.main.filters.GroupFilterChain
+import com.example.historicalpetersburg.map.main.filters.TypeFilterChain
+import com.example.historicalpetersburg.map.main.views.adapters.HistoricalObjectListAdapter
+import com.example.historicalpetersburg.map.main.views.behaviors.ListBottomSheetBehaviorCallback
+import com.example.historicalpetersburg.map.main.views.bottomsheet.HistoricalObjectListBottomSheet
+import com.example.historicalpetersburg.map.main.views.listeners.GroupListSpinnerSelectedListener
+import com.example.historicalpetersburg.map.main.views.listeners.TypeSelectionListener
+import com.example.historicalpetersburg.tools.GlobalTools
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.util.Timer
+import java.util.TimerTask
 
 
-class MapFragment() : Fragment() {
+class MapFragment : Fragment() {
     private var savedView: View? = null
 
     private var _binding: FragmentMapBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    lateinit var bottomSheet: GroupsRoutesListBottomSheet
-    lateinit var extraBottomSheet: ExtraBottomSheet
+    private var timer: Timer? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // TODO создать менеджер
-    }
+    lateinit var bottomSheet: HistoricalObjectListBottomSheet
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        println(savedView)
 
         if (savedView != null) {
             return savedView as View
@@ -218,54 +224,158 @@ class MapFragment() : Fragment() {
         binding.mapview.map.setMapStyle(styleOnlyHide)
         binding.mapview.map.isNightModeEnabled = true
 
-        val groupRouteAdapter = GroupListAdapter(
-            GlobalTools.instance.activity,
-            MapManager.instance.objectManager.groups,
-        )
-
         val historicalObjectListAdapter = HistoricalObjectListAdapter(MapManager.instance.objectManager.listOfShown)
 
-        bottomSheet = GroupsRoutesListBottomSheet(binding.bottomSheetMain).apply {
-            peekHeight = 235
-            maxHeight = 1500
+        // Filters
+        val typeFilterChain = TypeFilterChain()
+
+        val groupFilter1 = GroupFilterChain()
+        val groupFilter2 = GroupFilterChain()
+
+        val completedFilter = CompleteFilterChain(false)
+
+        typeFilterChain.addNext(groupFilter1)
+        typeFilterChain.addNext(groupFilter2)
+        typeFilterChain.addNext(completedFilter)
+
+        MapManager.instance.objectManager.filterChain = typeFilterChain
+        val unions = MapManager.instance.objectManager.groupRepository.getUnions(2)
+        // End filters
+
+        bottomSheet = HistoricalObjectListBottomSheet(binding.bottomSheetMain).apply {
+            peekHeight = 300
+
             state = BottomSheetBehavior.STATE_COLLAPSED
-            halfExpandedRatio = 0.5f
+            halfExpandedRatio = 0.4f
+            behavior.isFitToContents = false
+            behavior.expandedOffset = GlobalTools.instance.getStatusBarHeight() + 5
 
             historicalObjectListAdapter.actionOnClick = {
-                state = BottomSheetBehavior.STATE_COLLAPSED
+//                state = BottomSheetBehavior.STATE_COLLAPSED
                 binding.mapview.visibility = View.VISIBLE
             }
 
-            setSpinner1(groupRouteAdapter, GroupListSpinnerSelectedListener(historicalObjectListAdapter))
+            setSpinner1(
+                unions[0],
+                GroupListSpinnerSelectedListener(groupFilter1, historicalObjectListAdapter)
+            )
+
+            setSpinner2(
+                unions[1],
+                GroupListSpinnerSelectedListener(groupFilter2, historicalObjectListAdapter)
+            )
 
             setRecycleViewList(historicalObjectListAdapter)
 
-            setCallback(ListBottomSheetBehaviorCallback(
-                binding.downContent, behavior
-            ))
+            setCallback(
+                ListBottomSheetBehaviorCallback(
+                binding.downContent, requireActivity().window, behavior)
+            )
         }
 
-        binding.typeSelection.addOnTabSelectedListener(TypeSelectionListener(historicalObjectListAdapter))
+        binding.typeSelection.addOnTabSelectedListener(
+            TypeSelectionListener(typeFilterChain, historicalObjectListAdapter)
+        )
 
-        extraBottomSheet = ExtraBottomSheet(binding.bottomSheetOther)
+        binding.zoomInButton.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> startZooming(0.3f)
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> stopZooming()
+            }
+            true
+        }
+
+        binding.zoomOutButton.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> startZooming(-0.3f)
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> stopZooming()
+            }
+            true
+        }
+
+        binding.zoomLocationButton.setOnClickListener {
+            MapManager.instance.locationManager.let {
+                it.zoomInPosition()
+                it.follow = true
+            }
+        }
+
+        MapManager.instance.map.addCameraPositionChangedListener {
+            MapManager.instance.locationManager.follow = false
+        }
+
+        MapManager.instance.map.apply {
+            zoomPadding.right = (binding.zoomInButton.layoutParams.width + binding.mapToolsWindow.marginEnd).toFloat()
+            zoomPadding.top = 100f
+            zoomPadding.bottom = 450f // TODO
+        }
+
+        MapManager.instance.locationManager.actionsToFollowChange.add {
+            binding.zoomLocationButton.background = if (it) {
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_on_secondary_round_all_30_inset_10)
+            } else {
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_on_primary_round_all_30_inset_10)
+            }
+        }
+
+        binding.notCompletedCheck.setOnCheckedChangeListener { _, isChecked ->
+            completedFilter.active = isChecked
+            MapManager.instance.objectManager.let {
+                it.updateShown()
+                it.zoomShown()
+            }
+        }
+
+        MapManager.instance.objectManager.zoomShown()
 
         return root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
 
-//        MapManager.instance.objectManager.returnSelectedRoutes()
-        // TODO
+        MapManager.instance.locationManager.startUpdate()
+        if (!MapManager.instance.locationManager.zoomInPosition()) {
+            MapManager.instance.objectManager.zoomShown()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        MapManager.instance.locationManager.stopUpdate()
+        bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MapManager.instance.routeInspector.stop()
     }
 
     private fun setupMapManager() {
         MapManager.setupYandexManager(binding.mapview, this)
 
         MapManager.instance.createDefaultRoutes()
-//        MapManager.instance.objectManager.selectAll()
+        MapManager.instance.objectManager.updateShown()
+    }
 
-        // -----------------------------
+    private fun startZooming(step: Float) {
+        val mainHandler = Handler(Looper.getMainLooper())
+        timer = Timer().apply {
+            schedule(object : TimerTask() {
+                override fun run() {
+                    mainHandler.post {
+                        MapManager.instance.map.zoom(step, 0.1f)
+                    }
+                }
+            }, 0, 100)
+        }
+    }
+
+    private fun stopZooming() {
+        println(MapManager.instance.map.camera.zoom)
+        timer?.cancel()
+        timer = null
     }
 }
 

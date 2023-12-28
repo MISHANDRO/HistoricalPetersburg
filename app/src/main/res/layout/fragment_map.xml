@@ -13,33 +13,35 @@
         android:layout_height="match_parent" />
 
     <LinearLayout
+        android:id="@+id/map_tools_window"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="end"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="330dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true">
+        android:layout_marginTop="250dp"
+        android:layout_marginEnd="10dp"
+        android:layout_gravity="end">
 
         <ImageButton
+            android:id="@+id/zoom_in_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/background_on_primary_round_all_30_inset_10"
-            android:foreground="@drawable/button_add" />
+            android:foreground="@drawable/button_add"
+            android:background="@drawable/background_on_primary_round_all_30_inset_10" />
 
         <ImageButton
+            android:id="@+id/zoom_out_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/background_on_primary_round_all_30_inset_10"
-            android:foreground="@drawable/button_indeterminate" />
+            android:foreground="@drawable/button_indeterminate"
+            android:background="@drawable/background_on_primary_round_all_30_inset_10" />
 
         <ImageButton
+            android:id="@+id/zoom_location_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/background_on_primary_round_all_30_inset_10"
-            android:foreground="@drawable/button_nav" />
+            android:foreground="@drawable/button_nav"
+            android:background="@drawable/background_on_primary_round_all_30_inset_10" />
 
     </LinearLayout>
 
@@ -94,6 +96,7 @@
                 </com.google.android.material.tabs.TabLayout>
 
                 <CheckBox
+                    android:id="@+id/not_completed_check"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
@@ -103,7 +106,7 @@
                     android:paddingEnd="10dp"
                     android:textSize="16sp"
                     android:textColor="?colorOnPrimary"
-                    android:text="@string/places"/>
+                    android:text="@string/not_competed_objects"/>
 
             </LinearLayout>
 
@@ -114,22 +117,7 @@
 
     <include
         android:id="@+id/bottom_sheet_main"
-        layout="@layout/bottom_sheet_groups_list"/>
-
-    <LinearLayout
-        android:id="@+id/bottom_sheet_other"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        >
-
-        <FrameLayout
-            android:id="@+id/bottom_sheet_other_content_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
+        layout="@layout/bottom_sheet_groups_list"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

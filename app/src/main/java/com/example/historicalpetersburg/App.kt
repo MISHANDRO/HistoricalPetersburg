@@ -1,50 +1,53 @@
 package com.example.historicalpetersburg
 
+import android.app.Activity
 import android.app.Application
-import android.content.pm.PackageManager
-import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.os.Bundle
+import com.example.historicalpetersburg.activities.MainActivity
 import com.example.historicalpetersburg.map.MapManager
-import com.yandex.mapkit.MapKitFactory
-import com.yandex.runtime.i18n.I18nManagerFactory
-import java.util.Locale
+import com.example.historicalpetersburg.tools.NetworkStateHandler
+import com.example.historicalpetersburg.tools.settings.Settings
 
 
 class App : Application() {
+    private val activeActivitiesMutable = mutableListOf<Activity>()
     var mainActivity: MainActivity? = null
+
+    val activeActivities: List<Activity>
+        get() = activeActivitiesMutable
 
     override fun onCreate() {
         super.onCreate()
         MapManager.setYandexApiKey("cda8bfdd-d4b6-4c01-98b7-9207602e9f3b")
 
-        setLang(getSharedPreferences("settings", MODE_PRIVATE)?.getString("lang", "en"))
-//        setLocale()
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.registerDefaultNetworkCallback(NetworkStateHandler(this))
+
+        Settings.instance.localeHelper.availableLanguage = resources.getStringArray(R.array.lang_values)
+        val defaultPreference = Settings.instance.getDefaultSharedPreferences(this)
+        Settings.instance.setValueByKey(defaultPreference, "language")
+
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                activeActivitiesMutable.add(activity)
+            }
+
+            override fun onActivityStarted(activity: Activity) {}
+
+            override fun onActivityResumed(activity: Activity) {}
+
+            override fun onActivityPaused(activity: Activity) {}
+
+            override fun onActivityStopped(activity: Activity) {}
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
+            override fun onActivityDestroyed(activity: Activity) {
+                activeActivitiesMutable.remove(activity)
+            }
+        })
     }
 
-    fun setLang(lang: String?) {
-        val resources = resources
-        val configuration: Configuration = resources.configuration
-        val locale: Locale = Locale(lang ?: "en")
-        if (!configuration.locale.equals(locale)) {
-            configuration.setLocale(locale)
-            resources.updateConfiguration(configuration, null)
-        }
 
-        mainActivity?.recreate()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-//        setLocale()
-    }
-
-    private fun setLocale() {
-        val resources = resources
-        val configuration: Configuration = resources.configuration
-        val locale: Locale = Locale("en")
-        if (!configuration.locale.equals(locale)) {
-            configuration.setLocale(locale)
-            resources.updateConfiguration(configuration, null)
-        }
-
-    }
 }

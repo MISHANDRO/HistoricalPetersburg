@@ -1,24 +1,30 @@
 package com.example.historicalpetersburg.map
 
-import com.example.historicalpetersburg.R
-import com.example.historicalpetersburg.map.models.Coordinate
-import com.example.historicalpetersburg.map.services.HistoricalObjectManager
-import com.example.historicalpetersburg.map.services.location.ILocationManager
-import com.example.historicalpetersburg.map.services.map.IMapService
-import com.example.historicalpetersburg.map.services.map.YandexMapService
+import com.example.historicalpetersburg.map.main.HistoricalObjectManager
+import com.example.historicalpetersburg.map.main.location.ILocationManager
+import com.example.historicalpetersburg.map.main.IMapService
+import com.example.historicalpetersburg.map.main.UserManager
+import com.example.historicalpetersburg.map.main.location.AvailableUseLocationProxy
+import com.example.historicalpetersburg.map.main.repositories.SqliteGroupRepository
+import com.example.historicalpetersburg.map.main.repositories.SqlitePlaceRepository
+import com.example.historicalpetersburg.map.main.repositories.SqliteRouteRepository
+import com.example.historicalpetersburg.map.main.repositories.SqliteUserRepository
+import com.example.historicalpetersburg.map.main.routeinspector.RouteInspector
+import com.example.historicalpetersburg.map.yandex.location.YandexLocationManager
+import com.example.historicalpetersburg.map.yandex.YandexMapService
+import com.example.historicalpetersburg.tools.DbHelper
+import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.ui.map.MapFragment
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
 
 class MapManager private constructor() {
     private var _mapFragment: MapFragment? = null
-
     private var _map: IMapService? = null
-
     private var _objectManager: HistoricalObjectManager? = null
-
     private var _locationManager: ILocationManager? = null
-
+    private var _routeInspector: RouteInspector? = null
+    private var _userManager: UserManager? = null
 
     val mapFragment: MapFragment
         get() = _mapFragment!!
@@ -31,6 +37,12 @@ class MapManager private constructor() {
 
     val locationManager: ILocationManager
         get() = _locationManager!!
+
+    val routeInspector: RouteInspector
+        get() = _routeInspector!!
+
+    val userManager: UserManager
+        get() = _userManager!!
 
     companion object {
         private val instanceObj: MapManager by lazy { MapManager() }
@@ -53,65 +65,37 @@ class MapManager private constructor() {
             instance._mapFragment = mapFragment
             instance._map = YandexMapService(mapView)
 
-//            MapKitFactory.initialize(activity)
-
             instance._objectManager = HistoricalObjectManager()
-//            instance._locationManager = AvailableUseLocationProxy(YandexLocationManager())
+            instance._locationManager = YandexLocationManager(AvailableUseLocationProxy())
+
+            instance._routeInspector = RouteInspector()
+
+
+            instance._userManager = UserManager(
+                SqliteUserRepository(DbHelper(GlobalTools.instance.activity, "user.db", 1, false)))
 
             MapKitFactory.getInstance().onStart()
             mapView.onStart()
         }
     }
 
-    fun clear() {
-        _map = null
-        _objectManager = null
-        _locationManager = null
-    }
-
     fun createDefaultRoutes() {
-        var route = listOf(
-            Coordinate(60.02296865460042, 30.232057123587953),
-            Coordinate(60.021416771156964, 30.233827381537782),
-            Coordinate(60.02191617415349, 30.23556545297943),
-            Coordinate(60.022469267560666, 30.235801487372743)
-        )
+        val dbHelper = DbHelper(GlobalTools.instance.activity, "app.db")
 
-        val group1 = objectManager.addGroup().apply {
-            name = "Категория 1"
-        }
+        val groupRepository = SqliteGroupRepository(dbHelper)
+        objectManager.groupRepository = groupRepository
 
-        val group2 = objectManager.addGroup().apply {
-            name = "Категория 2"
-        }
-        objectManager.addRoute(route, listOf(group1)).apply {
-            name = "Маршрут 1 харош"
-        }
+        val routeRepository = SqliteRouteRepository(dbHelper)
+        objectManager.routeRepository = routeRepository
 
-        route = listOf(
-            Coordinate(60.023376971379676,30.232946668237947),
-            Coordinate(60.024683921240154,30.237026046907634)
-        )
-        objectManager.addRoute(route, listOf(group2)).apply {
-            name = "Еще хорош 2"
-        }
+        val placeRepository = SqlitePlaceRepository(dbHelper)
+        objectManager.placeRepository = placeRepository
 
-        route = listOf(
-            Coordinate(60.020903623637274,30.228957962190844),
-            Coordinate(60.023545581819505,30.229022335207212),
-            Coordinate(60.02495317510064,30.234096810760526)
-        )
-        objectManager.addRoute(route, listOf(group1, group2)).apply {
-            name = "Бим 3"
-            imagesArrayId = R.array.route_images_1
-        }
+        objectManager.createAll()
 
-//        MapManager.instance.map.addPlacemark(Coordinate(60.0229774804831,30.233355569284313))
-
-        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313), listOf(group1)).apply {
-            name = "Точка"
-        }
-
-        objectManager.updateShown()
+//        objectManager.addPlace(Coordinate(60.0229774804831,30.233355569284313)).apply {
+//            name.value = "Точка"
+//            addGroups(listOf(group1))
+//        }
     }
 }

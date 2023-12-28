@@ -1,17 +1,24 @@
 <resources>
     <string name="app_name">HistoricalPetersburg</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">Email huil</string>
+    <string name="nav_header_title">Historival map of St.Petersurg</string>
+    <string name="nav_header_subtitle">Test version</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string name="continue_text">Continue</string>
 
     <string name="menu_setting">Setting</string>
     <string name="menu_achievements">Achievements</string>
 
-    <string name="all_groups_name">All categories</string>
+    <!-- Fullscreen image viewer -->
+    <string name="option_menu_save">Save to gallery</string>
+    <string name="image_viewer_of">%d of %d</string>
+    <string name="unsuccess_save">Failed to download</string>
+    <string name="unsuccess_load">Failed to load</string>
 
     <!-- Preference Titles -->
     <string name="language_title">Language</string>
+    <string name="language_set_title">Select the application language:</string>
     <string name="font_title">Font</string>
     <string name="user_title">User, that is you :)</string>
 
@@ -24,8 +31,42 @@
     <string name="user_name_default">Super guest</string>
     <string name="user_reset_title">Reset progress</string>
 
+    <string name="user_reset_success">Success reset!</string>
+
     <!-- Choose routes, places or all -->
     <string name="all_routes_places">All</string>
     <string name="routes">Routes</string>
     <string name="places">Places</string>
+    <string name="not_competed_objects">Only not completed</string>
+
+    <!-- Give access to location-->
+    <string name="give_location_title">I need to know your location!</string>
+    <string name="give_location_text">Let me determine the location so that we can cooperate!</string>
+
+    <!-- Route message-->
+    <string name="location_not_available">Location is not available now!</string>
+    <string name="start_route_btn">Start go to route</string>
+    <string name="continue_route_btn">Go to next point</string>
+    <string name="go_to_cur_point">Go go (%d m)</string>
+    <string name="finish_route_btn">Finish route</string>
+    <string name="thanks_for_complete_route_title">Thank you for completing the route «%s»</string>
+    <string name="thanks_for_complete_route_body">We hope you will not stop there)</string>
+    
+    <string name="suggest_to_come_start_title">You need to arrive at the start of route!</string>
+    <string name="suggest_to_come_start_body">To start the route, you need to be at the starting point. You can open the maps app and get there in a convenient way.</string>
+    <string name="open_map_btn">Open map</string>
+
+    <string name="stop_route_title">Are you sure you want to stop the route?</string>
+    <string name="stop_route_body">The progress will be reset. And you will have to go through the route first!</string>
+    <string name="stop_route_btn">Stop the route</string>
+
+    <!-- Place message-->
+    <string name="place_btn">Unlock</string>
+    <string name="place_already_complete_btn">Place already complete!</string>
+
+    <string name="to_next_part">%s\n\nPush bottom button when you are where!</string>
+
+    <string name="suggest_to_come_place_title">You need to arrive at the this place!</string>
+    <string name="suggest_to_come_place_body">To unlock place info, you need to be at the this place. You can open the maps app and get there in a convenient way.</string>
+
 </resources>
