@@ -1,29 +1,37 @@
 package com.example.historicalpetersburg.map.main.views.bottomsheet
 
+import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.historicalpetersburg.R
 import com.example.historicalpetersburg.activities.FullscreenImageViewerActivity
 import com.example.historicalpetersburg.databinding.BottomSheetHistoricalObjectBinding
 import com.example.historicalpetersburg.map.MapManager
+import com.example.historicalpetersburg.map.main.models.Coordinate
 import com.example.historicalpetersburg.map.main.objects.PlaceData
 import com.example.historicalpetersburg.tools.GlobalTools
 import com.example.historicalpetersburg.tools.image.ImageAdapter
 import com.example.historicalpetersburg.tools.image.ImageArray
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.yandex.mapkit.directions.Directions
+import com.yandex.mapkit.directions.DirectionsFactory
+import com.yandex.mapkit.geometry.Direction
 
 
 class PlaceBottomSheet(val placeData: PlaceData) : CustomDialog() {
     lateinit var binding: BottomSheetHistoricalObjectBinding
 
-    override var peekHeight = 520
+    override var peekHeight = 540
     override var maxHeight = 1900
     override var halfExpandedRatio = 0.5f
 
@@ -141,7 +149,44 @@ class PlaceBottomSheet(val placeData: PlaceData) : CustomDialog() {
     }
 
     fun userInPlace() {
+        val curPosition = MapManager.instance.locationManager.curPosition
+        if (curPosition == null) {
+            GlobalTools.instance.let {
+                it.toast(it.getString(R.string.location_not_available))
+            }
+            return
+        }
+
+        val coordinate = placeData.coordinates!![0]
+        if (!isMinDistance(curPosition, coordinate)) {
+            val builder = AlertDialog.Builder(requireContext(), R.style.TransparentDialog)
+
+            val view = LayoutInflater.from(requireContext()).inflate(R.layout.alert_one_button, null)
+            builder.setView(view)
+            view.findViewById<Button>(R.id.alert_btn).apply {
+                setOnClickListener {
+                    val uri = Uri.parse("geo:${coordinate.latitude},${coordinate.longitude}")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(mapIntent)
+                }
+                text = resources.getString(R.string.open_map_btn)
+            }
+            view.findViewById<TextView>(R.id.alert_title).text = requireContext()
+                .getString(R.string.suggest_to_come_place_title)
+
+            view.findViewById<TextView>(R.id.alert_body).text = resources
+                .getString(R.string.suggest_to_come_place_body)
+            builder.create().show()
+
+            return
+        }
+
         MapManager.instance.userManager.repository.saveCompletePlace(placeData)
         build()
+    }
+
+    private fun isMinDistance(coordinate1: Coordinate, coordinate2: Coordinate): Boolean {
+        return Coordinate.getDistance(coordinate1, coordinate2) <= 20
+//        return true  // DEBUG
     }
 }

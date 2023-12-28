@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -88,18 +89,22 @@ class BottomSheetRouteViewVisitor(private var bottomSheet: RouteBottomSheet) : I
 
             val builder = AlertDialog.Builder(bottomSheet.requireContext(), R.style.TransparentDialog)
 
-            val view = LayoutInflater.from(bottomSheet.requireContext()).inflate(R.layout.info_thanks, null)
+            val view = LayoutInflater.from(bottomSheet.requireContext()).inflate(R.layout.alert_one_button, null)
             builder.setView(view)
             builder.setOnCancelListener {
                 bottomSheet.close()
             }
             val alert = builder.create()
-            view.findViewById<Button>(R.id.continue_btn).setOnClickListener {
-                alert.cancel()
+            view.findViewById<Button>(R.id.alert_btn).apply {
+                setOnClickListener {
+                    alert.cancel()
+                }
+                text = bottomSheet.resources.getString(R.string.continue_text)
             }
-            view.findViewById<TextView>(R.id.thanks_title).text = bottomSheet.requireContext().getString(
+            view.findViewById<TextView>(R.id.alert_title).text = bottomSheet.requireContext().getString(
                 R.string.thanks_for_complete_route_title, bottomSheet.routeData.name.value
             )
+            view.findViewById<TextView>(R.id.alert_body).text = bottomSheet.resources.getString(R.string.thanks_for_complete_route_body)
             alert.show()
         } else {
             bottomSheet.close()
@@ -118,7 +123,10 @@ class BottomSheetRouteViewVisitor(private var bottomSheet: RouteBottomSheet) : I
         }
 
         var distance = Coordinate.getDistance(MapManager.instance.locationManager.curPosition!!, state.partRoute.coordinate)
-        binding.mainButton.text = bottomSheet.requireContext().getString(R.string.go_to_cur_point, distance)
+        binding.mainButton.apply {
+            text = bottomSheet.requireContext().getString(R.string.go_to_cur_point, distance)
+            setBackgroundColor(Color.BLACK)
+        }
 
         followDistanceTextRender = { coordinate ->
             distance = Coordinate.getDistance(coordinate, state.partRoute.coordinate)
@@ -133,7 +141,7 @@ class BottomSheetRouteViewVisitor(private var bottomSheet: RouteBottomSheet) : I
                     setTextColor(Color.WHITE)
                     isEnabled = false
                 }
-                isEnabled = true // DEBUG
+//                isEnabled = true // DEBUG
             }
         }
     }
@@ -181,8 +189,27 @@ class BottomSheetRouteViewVisitor(private var bottomSheet: RouteBottomSheet) : I
             return
         }
 
-        if (!isMinDistance(curPosition, bottomSheet.routeData.startPlacemark!!.coordinate)) {
-            GlobalTools.instance.toast("TODO Ты не пришел, приди")
+        val startCoordinate = bottomSheet.routeData.startPlacemark!!.coordinate
+        if (!isMinDistance(curPosition, startCoordinate)) {
+            val builder = AlertDialog.Builder(bottomSheet.requireContext(), R.style.TransparentDialog)
+
+            val view = LayoutInflater.from(bottomSheet.requireContext()).inflate(R.layout.alert_one_button, null)
+            builder.setView(view)
+            view.findViewById<Button>(R.id.alert_btn).apply {
+                setOnClickListener {
+                    val uri = Uri.parse("geo:${startCoordinate.latitude},${startCoordinate.longitude}")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+                    bottomSheet.startActivity(mapIntent)
+                }
+                text = bottomSheet.resources.getString(R.string.open_map_btn)
+            }
+            view.findViewById<TextView>(R.id.alert_title).text = bottomSheet.requireContext()
+                .getString(R.string.suggest_to_come_start_title)
+
+            view.findViewById<TextView>(R.id.alert_body).text = bottomSheet.resources
+                .getString(R.string.suggest_to_come_start_body)
+            builder.create().show()
+
             return
         }
 
@@ -196,20 +223,23 @@ class BottomSheetRouteViewVisitor(private var bottomSheet: RouteBottomSheet) : I
         }
 
         binding.closeBtn.setOnClickListener {
-            // TODO
-            val builder = AlertDialog.Builder(bottomSheet.requireContext())
-            builder.setTitle("Завершить маршрут?")
-            builder.setMessage("Выы точно хотите завершить маршрут? Прогресс будет утерян, и маршрут придется проходит заново")
+            val builder = AlertDialog.Builder(bottomSheet.requireContext(), R.style.TransparentDialog)
 
-            builder.setNegativeButton("Нет") { dialog, which ->
-                dialog.dismiss()
-            }
-
-            builder.setPositiveButton("Да") { dialog, which ->
-                MapManager.instance.routeInspector.stop()
-            }
-
+            val view = LayoutInflater.from(bottomSheet.requireContext()).inflate(R.layout.alert_one_button, null)
+            builder.setView(view)
             val alert = builder.create()
+            view.findViewById<Button>(R.id.alert_btn).apply {
+                setOnClickListener {
+                    MapManager.instance.routeInspector.stop()
+                    bottomSheet.close()
+                    alert.cancel()
+                }
+                text = bottomSheet.resources.getString(R.string.stop_route_btn)
+                setBackgroundColor(Color.RED)
+                setTextColor(Color.WHITE)
+            }
+            view.findViewById<TextView>(R.id.alert_title).text = bottomSheet.requireContext().getString(R.string.stop_route_title)
+            view.findViewById<TextView>(R.id.alert_body).text = bottomSheet.resources.getString(R.string.stop_route_body)
             alert.show()
         }
 
@@ -224,8 +254,8 @@ class BottomSheetRouteViewVisitor(private var bottomSheet: RouteBottomSheet) : I
     }
 
     private fun isMinDistance(coordinate1: Coordinate, coordinate2: Coordinate): Boolean {
-//        return Coordinate.getDistance(coordinate1, coordinate2) <= minDistanceMetres
-        return true
+        return Coordinate.getDistance(coordinate1, coordinate2) <= minDistanceMetres // DEBUG
+//        return true
     }
 
     private fun markPart(partRoute: PartRoute) {
@@ -237,7 +267,7 @@ class BottomSheetRouteViewVisitor(private var bottomSheet: RouteBottomSheet) : I
         }
 
         MapManager.instance.locationManager.curPosition?.let { curPosition ->
-//            MapManager.instance.map.zoom(listOf(curPosition, partRoute.coordinate))
+            MapManager.instance.map.zoom(listOf(curPosition, partRoute.coordinate))
         }
     }
 

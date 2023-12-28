@@ -10,11 +10,11 @@ class NetworkStateHandler(val context: Context) : ConnectivityManager.NetworkCal
 
     override fun onAvailable(network: Network) {
         // Сеть доступна
-        Toast.makeText(context, "Инет ЕСТЬ", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(context, "Инет ЕСТЬ", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLost(network: Network) {
         // Сеть потеряна
-        Toast.makeText(context, "Инета НЕТ", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(context, "Инета НЕТ", Toast.LENGTH_SHORT).show()
     }
 }

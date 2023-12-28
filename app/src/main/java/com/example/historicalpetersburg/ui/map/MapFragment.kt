@@ -243,7 +243,7 @@ class MapFragment : Fragment() {
         // End filters
 
         bottomSheet = HistoricalObjectListBottomSheet(binding.bottomSheetMain).apply {
-            peekHeight = 250
+            peekHeight = 300
 
             state = BottomSheetBehavior.STATE_COLLAPSED
             halfExpandedRatio = 0.4f

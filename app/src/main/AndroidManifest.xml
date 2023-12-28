@@ -23,11 +23,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HistoricalPetersburg">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.ToolsActivity"
@@ -37,7 +32,13 @@
             android:name=".activities.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashScreen"></activity>
+            android:theme="@style/SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.FullscreenImageViewerActivity"
             android:exported="true"

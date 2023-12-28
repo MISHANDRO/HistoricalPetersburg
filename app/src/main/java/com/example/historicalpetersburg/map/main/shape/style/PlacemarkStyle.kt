@@ -11,5 +11,11 @@ enum class PlacemarkStyle(
     )),
     Start1(arrayOf(
         PlacemarkIcon(R.drawable.ic_arrow, true,0.5f, 0.5f, 0.5f)
+    )),
+    Bandit(arrayOf(
+        PlacemarkIcon(R.drawable.ic_bandit, false,0.1f, 0.5f, 0.5f)
+    )),
+    Location(arrayOf(
+        PlacemarkIcon(R.drawable.ic_location, false,0.1f, 0.5f, 0.5f)
     ))
 }

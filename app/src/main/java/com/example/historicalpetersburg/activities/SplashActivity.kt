@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
 
         Handler().postDelayed({
             if (!GlobalTools.instance.isConnectedToInternet(this)) {
-                Toast.makeText(this, "Нет инета, сука!", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(this, "Нет инета, сука!", Toast.LENGTH_SHORT).show()
 
                 val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
                 val networkCallback = object : ConnectivityManager.NetworkCallback() {

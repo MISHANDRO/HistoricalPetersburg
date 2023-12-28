@@ -9,5 +9,5 @@ enum class RouteStyle(
     val outlineColor: Int,
 ) {
     Default(3f, Color.BLUE, 1f, Color.BLACK),
-    RED(5f, Color.RED, 1f, Color.BLACK)
+    RED(3f, Color.RED, 1f, Color.BLACK)
 }

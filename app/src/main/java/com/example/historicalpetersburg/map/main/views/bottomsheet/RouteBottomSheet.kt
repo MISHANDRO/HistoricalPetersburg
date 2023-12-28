@@ -31,7 +31,7 @@ class RouteBottomSheet(val routeData: RouteData) : CustomDialog() {
 
     var visitor: BottomSheetRouteViewVisitor? = null
 
-    override var peekHeight = 520
+    override var peekHeight = 540
     override var maxHeight = 1900
     override var halfExpandedRatio = 0.5f
 

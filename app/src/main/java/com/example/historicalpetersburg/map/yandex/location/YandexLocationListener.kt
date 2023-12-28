@@ -43,7 +43,7 @@ class YandexLocationListener(
         if (curPosition == null) {
             curPositionMapObject = (Coordinate.fromYandexPoint(location.position)?.let {
                 MapManager.instance.map.addPlacemark(it).apply {
-                    style = PlacemarkStyle.Start1 // TODO
+                    style = PlacemarkStyle.Location
                 }
             } as YandexPlacemark).placemarkObject
             curPosition = location.position

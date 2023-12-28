@@ -22,7 +22,7 @@ class HistoricalObjectListAdapter(private val dataSet: MutableList<IHistoricalOb
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.item_list_route, viewGroup, false)
+            .inflate(R.layout.item_list_object, viewGroup, false)
 
         return ViewHolder(view)
     }

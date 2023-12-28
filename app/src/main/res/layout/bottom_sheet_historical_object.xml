@@ -31,11 +31,10 @@
 
                 <TextView
                     android:id="@+id/not_main_name"
-                    android:layout_width="150dp"
+                    android:layout_width="160dp"
                     android:layout_height="100dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="24dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="5dp"

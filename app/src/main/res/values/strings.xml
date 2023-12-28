@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">HistoricalPetersburg</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">Email huil</string>
+    <string name="nav_header_title">Historival map of St.Petersurg</string>
+    <string name="nav_header_subtitle">Test version</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -14,6 +14,7 @@
     <string name="option_menu_save">Save to gallery</string>
     <string name="image_viewer_of">%d of %d</string>
     <string name="unsuccess_save">Failed to download</string>
+    <string name="unsuccess_load">Failed to load</string>
 
     <!-- Preference Titles -->
     <string name="language_title">Language</string>
@@ -49,11 +50,23 @@
     <string name="go_to_cur_point">Go go (%d m)</string>
     <string name="finish_route_btn">Finish route</string>
     <string name="thanks_for_complete_route_title">Thank you for completing the route «%s»</string>
-    <string name="thanks_for_complete_route_main">We hope you will not stop there)</string>
+    <string name="thanks_for_complete_route_body">We hope you will not stop there)</string>
+    
+    <string name="suggest_to_come_start_title">You need to arrive at the start of route!</string>
+    <string name="suggest_to_come_start_body">To start the route, you need to be at the starting point. You can open the maps app and get there in a convenient way.</string>
+    <string name="open_map_btn">Open map</string>
+
+    <string name="stop_route_title">Are you sure you want to stop the route?</string>
+    <string name="stop_route_body">The progress will be reset. And you will have to go through the route first!</string>
+    <string name="stop_route_btn">Stop the route</string>
 
     <!-- Place message-->
     <string name="place_btn">Unlock</string>
     <string name="place_already_complete_btn">Place already complete!</string>
 
     <string name="to_next_part">%s\n\nPush bottom button when you are where!</string>
+
+    <string name="suggest_to_come_place_title">You need to arrive at the this place!</string>
+    <string name="suggest_to_come_place_body">To unlock place info, you need to be at the this place. You can open the maps app and get there in a convenient way.</string>
+
 </resources>
